@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "katex/dist/katex.min.css";
 @import "./theme.css";
 @import "./typography.css";
 @import "rehype-callouts/theme/obsidian";
@@ -22,7 +23,7 @@
 }
 
 @utility max-w-app {
-  @apply max-w-3xl;
+  @apply max-w-5xl;
 }
 
 @utility app-layout {

@@ -136,7 +136,7 @@ const ogImage = ogImageUrl
       id="article"
       class:list={[
         "mt-8 w-full",
-        "app-prose max-w-app",
+        "app-prose max-w-3xl",
         "prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)",
       ]}
     >
@@ -259,6 +259,33 @@ const ogImage = ogImageUrl
     }
   }
   attachCopyButtons();
+
+  async function renderMermaidDiagrams() {
+    const blocks = Array.from(
+      document.querySelectorAll("pre > code.language-mermaid")
+    );
+    if (!blocks.length) return;
+
+    const { default: mermaid } =
+      await import("https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs");
+    mermaid.initialize({
+      startOnLoad: false,
+      theme:
+        document.documentElement.dataset.theme === "dark" ? "dark" : "default",
+    });
+
+    blocks.forEach((block, index) => {
+      const source = block.textContent ?? "";
+      const wrapper = document.createElement("div");
+      wrapper.className = "mermaid my-6 overflow-x-auto";
+      wrapper.textContent = source;
+      wrapper.id = `mermaid-${index}`;
+      block.closest("pre")?.replaceWith(wrapper);
+    });
+
+    await mermaid.run({ nodes: document.querySelectorAll(".mermaid") });
+  }
+  renderMermaidDiagrams();
 
   /** Accessible image lightbox for article images. */
   function initLightbox() {

@@ -37,7 +37,7 @@ const isActive = (path: string) => {
 <a
   id="skip-to-content"
   href="#main-content"
-  class="bg-background text-accent absolute inset-s-16 -top-full z-50 px-3 py-2 backdrop-blur-lg transition-all focus:top-4"
+  class="bg-background text-accent inset-s-16 absolute -top-full z-50 px-3 py-2 backdrop-blur-lg transition-all focus:top-4"
 >
   {t.a11y.skipToContent}
 </a>
@@ -76,18 +76,34 @@ const isActive = (path: string) => {
       >
         <li class="col-span-2">
           <a
-            href={getRelativeLocaleUrl(locale, "posts")}
-            class:list={{ "active-nav": isActive("/posts") }}
+            href={getRelativeLocaleUrl(locale, "")}
+            class:list={{ "active-nav": isActive("/") }}
           >
-            {t.nav.posts}
+            Home
           </a>
         </li>
         <li class="col-span-2">
           <a
-            href={getRelativeLocaleUrl(locale, "tags")}
-            class:list={{ "active-nav": isActive("/tags") }}
+            href={getRelativeLocaleUrl(locale, "learning-paths")}
+            class:list={{ "active-nav": isActive("/learning-paths") }}
           >
-            {t.nav.tags}
+            Learning Paths
+          </a>
+        </li>
+        <li class="col-span-2">
+          <a
+            href={getRelativeLocaleUrl(locale, "research")}
+            class:list={{ "active-nav": isActive("/research") }}
+          >
+            Research
+          </a>
+        </li>
+        <li class="col-span-2">
+          <a
+            href={getRelativeLocaleUrl(locale, "thoughts")}
+            class:list={{ "active-nav": isActive("/thoughts") }}
+          >
+            Thoughts
           </a>
         </li>
         <li class="col-span-2">
@@ -136,7 +152,7 @@ const isActive = (path: string) => {
                 {isActive("/search") && (
                   <IconUnderline
                     aria-hidden="true"
-                    class="absolute bottom-0 w-6 scale-125 max-sm:inset-s-2"
+                    class="max-sm:inset-s-2 absolute bottom-0 w-6 scale-125"
                   />
                 )}
               </LinkButton>

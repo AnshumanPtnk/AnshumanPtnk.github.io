@@ -1,0 +1,72 @@
+---
+import { getCollection } from "astro:content";
+import IconArrowRight from "@/assets/icons/IconArrowRight.svg";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import Main from "@/components/Main.astro";
+import { getCategoryPosts } from "@/data/portal";
+import { getSortedPosts } from "@/utils/getSortedPosts";
+import { getPostUrl } from "@/utils/getPostPaths";
+import config from "@/config";
+
+const locale = Astro.currentLocale ?? config.site.lang;
+const posts = getCategoryPosts(
+  getSortedPosts(await getCollection("posts")),
+  "Research"
+);
+
+const structure = [
+  "Paper Summary",
+  "Core Intuition",
+  "Method / Architecture",
+  "Mathematics",
+  "Implementation Notes",
+  "Experiments",
+  "Observations",
+  "Limitations",
+  "References",
+];
+---
+
+<Layout
+  title={`Research | ${config.site.title}`}
+  description="Paper reviews, paper implementations, experiments, and findings."
+>
+  <Header />
+
+  <Main
+    pageTitle="Research"
+    pageDesc="Paper reviews, paper implementations, experiments, and findings."
+  >
+    <section class="border-border bg-muted/20 mb-8 rounded-lg border p-5">
+      <h2 class="text-xl font-semibold">Research note structure</h2>
+      <ul class="mt-4 grid gap-2 sm:grid-cols-2">
+        {structure.map(item => <li class="text-muted-foreground">{item}</li>)}
+      </ul>
+    </section>
+
+    <ul class="divide-border divide-y">
+      {
+        posts.map(({ id, data, filePath }) => (
+          <li class="py-5 first:pt-0">
+            <a
+              href={getPostUrl(id, filePath, locale)}
+              class="hover:text-accent group block"
+            >
+              <div class="flex items-center justify-between gap-4">
+                <h2 class="text-xl font-semibold">{data.title}</h2>
+                <IconArrowRight class="size-4 shrink-0 transition-transform group-hover:translate-x-1 rtl:-rotate-180" />
+              </div>
+              <p class="text-muted-foreground mt-2 leading-7">
+                {data.description}
+              </p>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </Main>
+
+  <Footer />
+</Layout>

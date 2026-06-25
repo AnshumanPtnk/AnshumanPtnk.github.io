@@ -2,37 +2,37 @@ import { defineAstroPaperConfig } from "./src/types/config";
 
 export default defineAstroPaperConfig({
   site: {
-    url: "https://astro-paper.pages.dev/",
-    title: "AstroPaper",
-    description: "A minimal, responsive and SEO-friendly Astro blog theme.",
-    author: "Sat Naing",
-    profile: "https://satna.ing",
+    url: "https://anshumanptnk.github.io/",
+    title: "Anshuman Patnaik",
+    description:
+      "A public AI engineering notebook on reinforcement learning, inference engineering, computer vision, AI agents, LLMs, semiconductors, and AI industry thoughts.",
+    author: "Anshuman Patnaik",
+    profile: "https://github.com/AnshumanPtnk",
     ogImage: "default-og.jpg",
     lang: "en",
-    timezone: "Asia/Bangkok",
+    timezone: "Asia/Kolkata",
     dir: "ltr",
   },
   posts: {
     perPage: 4,
-    perIndex: 4,
+    perIndex: 5,
     scheduledPostMargin: 15 * 60 * 1000,
   },
   features: {
     lightAndDarkMode: true,
     dynamicOgImage: true,
-    showArchives: true,
+    showArchives: false,
     showBackButton: true,
     editPost: {
       enabled: true,
-      url: "https://github.com/satnaing/astro-paper/edit/main/",
+      url: "https://github.com/AnshumanPtnk/AnshumanPtnk.github.io/edit/main/",
     },
     search: "pagefind",
   },
   socials: [
-    { name: "github",   url: "https://github.com/satnaing/astro-paper" },
-    { name: "x",        url: "https://x.com/username" },
+    { name: "github",   url: "https://github.com/AnshumanPtnk" },
     { name: "linkedin", url: "https://www.linkedin.com/in/username/" },
-    { name: "mail",     url: "mailto:yourmail@gmail.com" },
+    { name: "mail",     url: "mailto:anshuman.ptnk@gmail.com" },
   ],
   shareLinks: [
     { name: "whatsapp", url: "https://wa.me/?text=" },
