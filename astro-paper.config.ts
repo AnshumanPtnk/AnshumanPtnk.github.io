@@ -24,14 +24,13 @@ export default defineAstroPaperConfig({
     showArchives: false,
     showBackButton: true,
     editPost: {
-      enabled: true,
-      url: "https://github.com/AnshumanPtnk/AnshumanPtnk.github.io/edit/main/",
+      enabled: false,
     },
     search: "pagefind",
   },
   socials: [
     { name: "github",   url: "https://github.com/AnshumanPtnk" },
-    { name: "linkedin", url: "https://www.linkedin.com/in/username/" },
+    { name: "linkedin", url: "https://www.linkedin.com/in/anshuman-patnaik-a1a3a256/" },
     { name: "mail",     url: "mailto:anshuman.ptnk@gmail.com" },
   ],
   shareLinks: [

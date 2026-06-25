@@ -1,4 +1,5 @@
 ---
+draft: true
 pubDatetime: 2026-06-25T09:25:00+05:30
 title: "Distributed Systems Notes"
 tags:

@@ -1,4 +1,5 @@
 ---
+draft: true
 title: "Research Implementation Template"
 description: "A reusable structure for paper reviews, implementations, experiments, and findings."
 pubDatetime: 2026-06-25T11:10:00+05:30
@@ -6,7 +7,6 @@ tags:
   - Research
   - Experiments
 category: "Research"
-draft: false
 ---
 
 ## Paper Summary
