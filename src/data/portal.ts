@@ -43,13 +43,7 @@ export const learningPaths: LearningPath[] = [
       "Transformers, prompting, alignment, retrieval, evaluation, and model behavior.",
     accent: "LLM",
   },
-  {
-    title: "Semiconductors",
-    slug: "semiconductors",
-    description:
-      "AI accelerators, memory bandwidth, packaging, process trends, and future computing.",
-    accent: "CHIP",
-  },
+  // Semiconductors learning path hidden for now — see git history to restore.
 ];
 
 export const getCategoryPosts = (

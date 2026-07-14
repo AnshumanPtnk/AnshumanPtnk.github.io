@@ -7,7 +7,7 @@ tags:
   - AI Hardware
 category: "Semiconductors"
 featured: true
-draft: false
+draft: true
 ---
 
 AI accelerators are often discussed in terms of peak FLOPS, but real workloads spend much of their time moving data. Memory bandwidth, cache locality, interconnects, and packaging decisions shape useful throughput.

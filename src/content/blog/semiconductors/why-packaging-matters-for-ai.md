@@ -6,7 +6,7 @@ tags:
   - Semiconductors
   - Future Computing
 category: "Semiconductors"
-draft: false
+draft: true
 ---
 
 Modern AI chips are not only about transistor scaling. Packaging determines how compute, memory, and interconnects are arranged, which directly affects latency, bandwidth, power, and system cost.

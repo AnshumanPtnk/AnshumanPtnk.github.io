@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="920" viewBox="0 0 1400 920" role="img" aria-labelledby="title desc">
+<title id="title">From PPO rollout to learning targets</title>
+<desc id="desc">Diagram showing rewards becoming returns, critic values becoming baselines, and returns minus values producing normalized advantages.</desc>
+<style>
+  .bg{fill:#faf9f6}.box{fill:#fff;stroke:#26344d;stroke-width:2.5}.blue{fill:#edf3ff;stroke:#3b64b0;stroke-width:2.8}.green{fill:#eef8f1;stroke:#2f7b4d;stroke-width:2.8}.orange{fill:#fff4e8;stroke:#aa6721;stroke-width:2.8}.purple{fill:#f5efff;stroke:#7044aa;stroke-width:2.8}
+  .title{font:700 34px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#172033}.label{font:700 24px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#172033}.body{font:500 19px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#354056}.arrow{fill:none;stroke:#52617a;stroke-width:4;marker-end:url(#a)}
+</style>
+<defs><marker id="a" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0,0 L12,6 L0,12 z" fill="#52617a"/></marker></defs>
+<rect class="bg" width="1400" height="920"/>
+<text class="title" x="700" y="58" text-anchor="middle">From Rollout Data to PPO Learning Targets</text>
+
+<rect class="blue" x="100" y="125" width="340" height="130" rx="20"/>
+<text class="label" x="270" y="170" text-anchor="middle">Rollout Buffer</text>
+<text class="body" x="270" y="207" text-anchor="middle">s_t · a_t · r_t · done_t</text>
+<text class="body" x="270" y="237" text-anchor="middle">old log-probabilities</text>
+
+<path class="arrow" d="M440 190 L535 190"/>
+<rect class="orange" x="535" y="125" width="330" height="130" rx="20"/>
+<text class="label" x="700" y="170" text-anchor="middle">Return Targets</text>
+<text class="body" x="700" y="207" text-anchor="middle">G_t = r_t + γG_{t+1}</text>
+<text class="body" x="700" y="237" text-anchor="middle">or GAE targets</text>
+
+<path class="arrow" d="M270 255 L270 405"/>
+<rect class="purple" x="100" y="405" width="340" height="130" rx="20"/>
+<text class="label" x="270" y="450" text-anchor="middle">Critic Baseline</text>
+<text class="body" x="270" y="488" text-anchor="middle">V_φ(s_t)</text>
+<text class="body" x="270" y="518" text-anchor="middle">expected return</text>
+
+<path class="arrow" d="M865 190 C1035 190 1035 470 930 470"/>
+<path class="arrow" d="M440 470 L535 470"/>
+<rect class="green" x="535" y="405" width="395" height="130" rx="20"/>
+<text class="label" x="732" y="450" text-anchor="middle">Advantage</text>
+<text class="body" x="732" y="488" text-anchor="middle">A_t = G_t − V_φ(s_t)</text>
+<text class="body" x="732" y="518" text-anchor="middle">better or worse than expected</text>
+
+<path class="arrow" d="M732 535 L732 660"/>
+<rect class="box" x="485" y="660" width="495" height="135" rx="20"/>
+<text class="label" x="732" y="705" text-anchor="middle">Normalize and Freeze</text>
+<text class="body" x="732" y="743" text-anchor="middle">Â_t = (A_t − mean(A)) / (std(A)+ε)</text>
+<text class="body" x="732" y="774" text-anchor="middle">fixed during K optimization epochs</text>
+</svg>

@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900" role="img" aria-labelledby="title desc">
+<title id="title">PPO objective components</title>
+<desc id="desc">Diagram showing the actor clipped objective, critic value loss, and entropy bonus combining into the PPO update.</desc>
+<style>
+  .bg{fill:#faf9f6}.actor{fill:#eef8f1;stroke:#2f7b4d;stroke-width:2.8}.critic{fill:#f5efff;stroke:#7044aa;stroke-width:2.8}.entropy{fill:#fff4e8;stroke:#aa6721;stroke-width:2.8}.total{fill:#edf3ff;stroke:#3b64b0;stroke-width:3}.title{font:700 34px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#172033}.label{font:700 24px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#172033}.body{font:500 19px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#354056}.arrow{fill:none;stroke:#52617a;stroke-width:4;marker-end:url(#a)}
+</style>
+<defs><marker id="a" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0,0 L12,6 L0,12 z" fill="#52617a"/></marker></defs>
+<rect class="bg" width="1400" height="900"/>
+<text class="title" x="700" y="58" text-anchor="middle">The Three Components of a PPO Update</text>
+
+<rect class="actor" x="90" y="150" width="360" height="190" rx="22"/>
+<text class="label" x="270" y="198" text-anchor="middle">Actor Objective</text>
+<text class="body" x="270" y="238" text-anchor="middle">clipped surrogate</text>
+<text class="body" x="270" y="272" text-anchor="middle">increase good actions</text>
+<text class="body" x="270" y="305" text-anchor="middle">decrease bad actions safely</text>
+
+<rect class="critic" x="520" y="150" width="360" height="190" rx="22"/>
+<text class="label" x="700" y="198" text-anchor="middle">Critic Loss</text>
+<text class="body" x="700" y="238" text-anchor="middle">(Vφ(s_t) − G_t)²</text>
+<text class="body" x="700" y="272" text-anchor="middle">fit expected return</text>
+<text class="body" x="700" y="305" text-anchor="middle">improve future advantages</text>
+
+<rect class="entropy" x="950" y="150" width="360" height="190" rx="22"/>
+<text class="label" x="1130" y="198" text-anchor="middle">Entropy Bonus</text>
+<text class="body" x="1130" y="238" text-anchor="middle">H[πθ(·|s_t)]</text>
+<text class="body" x="1130" y="272" text-anchor="middle">preserve exploration</text>
+<text class="body" x="1130" y="305" text-anchor="middle">avoid premature collapse</text>
+
+<path class="arrow" d="M270 340 C270 470 520 490 610 545"/>
+<path class="arrow" d="M700 340 L700 545"/>
+<path class="arrow" d="M1130 340 C1130 470 880 490 790 545"/>
+
+<rect class="total" x="420" y="545" width="560" height="200" rx="24"/>
+<text class="label" x="700" y="595" text-anchor="middle">Combined PPO Optimization</text>
+<text class="body" x="700" y="640" text-anchor="middle">maximize clipped policy improvement</text>
+<text class="body" x="700" y="676" text-anchor="middle">minimize value prediction error</text>
+<text class="body" x="700" y="712" text-anchor="middle">retain enough stochasticity to explore</text>
+</svg>

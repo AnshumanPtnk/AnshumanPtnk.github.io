@@ -3,6 +3,7 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import IconCalendar from "@/assets/icons/IconCalendar.svg";
+import IconClock from "@/assets/icons/IconClock.svg";
 import config from "@/config";
 import { useTranslations } from "@/i18n";
 
@@ -15,6 +16,7 @@ type Props = {
   pubDatetime: string | Date;
   timezone?: string;
   modDatetime?: string | Date | null;
+  readingTime?: string;
 };
 
 const {
@@ -23,6 +25,7 @@ const {
   size = "sm",
   class: className = "",
   timezone: postTimezone,
+  readingTime,
 } = Astro.props;
 
 const t = useTranslations(Astro.currentLocale);
@@ -58,4 +61,22 @@ const date = datetime.format("D MMM, YYYY");
   >
     {date}
   </time>
+  {
+    readingTime && (
+      <>
+        <span aria-hidden="true" class="text-sm">
+          &bull;
+        </span>
+        <IconClock
+          class:list={[
+            "inline-block size-6 min-w-5.5",
+            { "scale-90": size === "sm" },
+          ]}
+        />
+        <span class:list={["text-sm", { "sm:text-base": size === "lg" }]}>
+          {readingTime}
+        </span>
+      </>
+    )
+  }
 </div>
