@@ -21,9 +21,12 @@ const { page } = Astro.props;
 
 const locale = Astro.currentLocale ?? config.site.lang;
 const t = useTranslations(locale);
+
+const pageSuffix = page.currentPage > 1 ? ` | Page ${page.currentPage}` : "";
+const title = `${t.pages.postsTitle}${pageSuffix} | ${config.site.title}`;
 ---
 
-<Layout title={`${t.pages.postsTitle} | ${config.site.title}`}>
+<Layout {title} description={t.pages.postsDesc}>
   <Header />
 
   <Breadcrumb />

@@ -27,7 +27,9 @@ export default defineConfig({
     mdx(),
     sitemap({
       filter: page =>
-        config.features?.showArchives !== false || !page.endsWith("/archives/"),
+        (config.features?.showArchives !== false ||
+          !page.endsWith("/archives/")) &&
+        !page.endsWith("/search/"),
     }),
   ],
   i18n: {
@@ -47,7 +49,7 @@ export default defineConfig({
       rehypePlugins: [rehypeKatex, rehypeCallouts],
     }),
     shikiConfig: {
-      themes: { light: "min-light", dark: "night-owl" },
+      themes: { light: "min-light" },
       defaultColor: false,
       wrap: false,
       transformers: [
@@ -75,6 +77,11 @@ export default defineConfig({
   env: {
     schema: {
       PUBLIC_GOOGLE_SITE_VERIFICATION: envField.string({
+        access: "public",
+        context: "client",
+        optional: true,
+      }),
+      PUBLIC_GOOGLE_ANALYTICS_ID: envField.string({
         access: "public",
         context: "client",
         optional: true,

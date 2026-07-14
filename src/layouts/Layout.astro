@@ -12,6 +12,7 @@ type Props = {
   description?: string;
   ogImage?: string;
   canonicalURL?: string;
+  noindex?: boolean;
 };
 
 const { site } = config;
@@ -21,6 +22,7 @@ const {
   description = site.description,
   ogImage = resolveDefaultOgImagePath(config),
   canonicalURL = new URL(Astro.url.pathname, Astro.site).href,
+  noindex = false,
 } = Astro.props;
 
 const socialImageURL = new URL(ogImage, Astro.site ?? Astro.url);
@@ -28,6 +30,18 @@ const rssHref = getRelativeLocaleUrl(
   Astro.currentLocale ?? config.site.lang,
   "rss.xml"
 );
+
+// Built as a raw string (rendered via set:html) rather than literal inline
+// script content — a `{cond && (<script>...</script>)}` block containing a
+// JS function declaration crashes prettier-plugin-astro's parser.
+const gtagInitScript = `
+  window.dataLayer = window.dataLayer || [];
+  function gtag(...args) {
+    dataLayer.push(args);
+  }
+  gtag("js", new Date());
+  gtag("config", "${site.googleAnalyticsId}");
+`;
 ---
 
 <!doctype html>
@@ -43,6 +57,7 @@ const rssHref = getRelativeLocaleUrl(
     <link rel="icon" href={getAssetPath("favicon.ico")} />
     <link rel="canonical" href={canonicalURL} />
     <meta name="generator" content={Astro.generator} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
 
     <!-- Font -->
     <Font
@@ -80,8 +95,7 @@ const rssHref = getRelativeLocaleUrl(
       href={new URL(rssHref, Astro.site)}
     />
 
-    <!-- Filled at runtime by theme.ts to match the current background colour -->
-    <meta name="theme-color" content="" />
+    <meta name="theme-color" content="#fffdf8" />
 
     <!-- Extra head content injected by child layouts (e.g. JSON-LD, article meta) -->
     <slot name="head" />
@@ -95,24 +109,18 @@ const rssHref = getRelativeLocaleUrl(
       )
     }
 
-    <!--
-      Inline FOUC-prevention script: sets data-theme on <html> before
-      the browser paints. Runs synchronously, no defer/async.
-    -->
-    <script is:inline>
-      (function () {
-        const stored = localStorage.getItem("theme");
-        const prefersDark = window.matchMedia(
-          "(prefers-color-scheme: dark)"
-        ).matches;
-        const theme = stored ?? (prefersDark ? "dark" : "light");
-        const root = document.firstElementChild;
-        root?.setAttribute("data-theme", theme);
-        root?.classList.toggle("dark", theme === "dark");
-        // Expose value so theme.ts can skip re-detection.
-        window.__theme = { value: theme };
-      })();
-    </script>
+    {
+      site.googleAnalyticsId && (
+        <Fragment>
+          <script
+            is:inline
+            async
+            src={`https://www.googletagmanager.com/gtag/js?id=${site.googleAnalyticsId}`}
+          />
+          <script is:inline set:html={gtagInitScript} />
+        </Fragment>
+      )
+    }
 
     <ClientRouter />
   </head>
@@ -120,8 +128,5 @@ const rssHref = getRelativeLocaleUrl(
     class="bg-background font-app text-foreground selection:bg-accent/75 selection:text-accent-foreground flex min-h-svh flex-col"
   >
     <slot />
-    <script>
-      import "@/scripts/theme";
-    </script>
   </body>
 </html>

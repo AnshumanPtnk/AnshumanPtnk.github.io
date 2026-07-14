@@ -19,6 +19,8 @@ interface SiteConfig {
   dir?: "ltr" | "rtl" | "auto";
   /** Google Search Console verification meta tag value */
   googleVerification?: string;
+  /** Google Analytics 4 measurement ID, e.g. "G-XXXXXXXXXX" */
+  googleAnalyticsId?: string;
 }
 
 interface PostsConfig {
@@ -34,8 +36,6 @@ interface PostsConfig {
 }
 
 interface FeaturesConfig {
-  /** Enable light/dark mode toggle. Defaults to true. */
-  lightAndDarkMode?: boolean;
   /**
    * Generate dynamic OG images per post and provide `/og.png` when the static
    * `public/{site.ogImage}` file is absent. When false, that file is required
@@ -115,7 +115,7 @@ type ResolvedSiteConfig = Required<
     | "ogImage"
   >
 > &
-  Pick<SiteConfig, "profile" | "googleVerification">;
+  Pick<SiteConfig, "profile" | "googleVerification" | "googleAnalyticsId">;
 
 export interface ResolvedAstroPaperConfig {
   site: ResolvedSiteConfig;

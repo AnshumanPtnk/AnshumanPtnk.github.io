@@ -120,7 +120,13 @@ const ogImage = ogImageUrl
     </h1>
 
     <div class="my-2 flex items-center gap-2">
-      <Datetime {pubDatetime} {modDatetime} {timezone} {readingTime} size="lg" />
+      <Datetime
+        {pubDatetime}
+        {modDatetime}
+        {timezone}
+        {readingTime}
+        size="lg"
+      />
       <span
         aria-hidden="true"
         class:list={[
@@ -138,7 +144,7 @@ const ogImage = ogImageUrl
       class:list={[
         "mt-8 w-full",
         "app-prose max-w-3xl",
-        "prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)",
+        "prose-pre:bg-(--shiki-light-bg)",
       ]}
     >
       <Content />
@@ -271,8 +277,7 @@ const ogImage = ogImageUrl
       await import("https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs");
     mermaid.initialize({
       startOnLoad: false,
-      theme:
-        document.documentElement.dataset.theme === "dark" ? "dark" : "default",
+      theme: "default",
     });
 
     blocks.forEach((block, index) => {

@@ -16,20 +16,28 @@ const { site } = config;
 const { title, description, ogImage, canonicalURL, pubDatetime, modDatetime } =
   Astro.props;
 
+// Mirrors Layout.astro's own default so JSON-LD always gets a real URL,
+// even when the post doesn't set an explicit canonicalURL.
+const resolvedCanonicalURL =
+  canonicalURL ?? new URL(Astro.url.pathname, Astro.site).href;
+
+const author = {
+  "@type": "Person",
+  name: site.author,
+  ...(site.profile && { url: site.profile }),
+};
+
 const structuredData = {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
   headline: title ?? site.title,
+  description,
   image: ogImage,
+  mainEntityOfPage: resolvedCanonicalURL,
   ...(pubDatetime && { datePublished: pubDatetime.toISOString() }),
-  ...(modDatetime && { dateModified: modDatetime.toISOString() }),
-  author: [
-    {
-      "@type": "Person",
-      name: site.author,
-      ...(site.profile && { url: site.profile }),
-    },
-  ],
+  dateModified: (modDatetime ?? pubDatetime)?.toISOString(),
+  author: [author],
+  publisher: author,
 };
 ---
 

@@ -10,9 +10,8 @@
   --font-app: var(--font-google-sans-code);
 }
 
-/* Light theme values */
-:root,
-[data-theme="light"] {
+/* Theme values */
+:root {
   --background: #fffdf8;
   --foreground: #151515;
   --accent: #c47f08;
@@ -20,15 +19,4 @@
   --muted: #f0ece3;
   --muted-foreground: #6f6b64;
   --border: #e3ded2;
-}
-
-/* Dark theme values */
-[data-theme="dark"] {
-  --background: #0b0c0b;
-  --foreground: #f4f1e8;
-  --accent: #f59f0a;
-  --accent-foreground: #08120d;
-  --muted: #181a17;
-  --muted-foreground: #a9a49a;
-  --border: #2a2d27;
 }

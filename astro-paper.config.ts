@@ -8,6 +8,7 @@ export default defineAstroPaperConfig({
       "A public AI engineering notebook on reinforcement learning, inference engineering, computer vision, AI agents, LLMs, and AI industry thoughts.",
     author: "Anshuman Patnaik",
     profile: "https://github.com/AnshumanPtnk",
+    googleAnalyticsId: "G-ZVPM15YE9L",
     ogImage: "default-og.jpg",
     lang: "en",
     timezone: "Asia/Kolkata",
@@ -19,7 +20,6 @@ export default defineAstroPaperConfig({
     scheduledPostMargin: 15 * 60 * 1000,
   },
   features: {
-    lightAndDarkMode: true,
     dynamicOgImage: true,
     showArchives: false,
     showBackButton: true,
