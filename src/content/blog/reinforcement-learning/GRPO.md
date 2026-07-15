@@ -1329,7 +1329,7 @@ Finally, reasoning traces trained only through outcome rewards may become longer
 
 ---
 
-## Key takeaways
+# Key takeaways
 
 GRPO is best understood as a restructuring of PPO for a specific class of problems. It replaces a learned critic with a prompt-specific Monte Carlo baseline computed from a group of responses. In verifiable domains, it also replaces the reward model with a deterministic checker.
 
