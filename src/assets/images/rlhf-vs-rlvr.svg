@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#333"/>
+    </marker>
+    <style>
+      .title { font: 700 28px Arial, sans-serif; fill:#111; }
+      .label { font: 600 20px Arial, sans-serif; fill:#111; }
+      .text { font: 17px Arial, sans-serif; fill:#222; }
+      .small { font: 15px Arial, sans-serif; fill:#333; }
+      .box { fill:#f7f7f7; stroke:#333; stroke-width:2; rx:16; }
+      .soft { fill:#eef3f8; stroke:#334; stroke-width:2; rx:16; }
+      .good { fill:#eef7ef; stroke:#355e3b; stroke-width:2; rx:16; }
+      .warn { fill:#fff5e6; stroke:#8a5a00; stroke-width:2; rx:16; }
+      .bad { fill:#fdeeee; stroke:#8b2f2f; stroke-width:2; rx:16; }
+      .arrow { stroke:#333; stroke-width:3; fill:none; marker-end:url(#arrow); }
+      .thin { stroke:#555; stroke-width:2; fill:none; marker-end:url(#arrow); }
+    </style>
+  </defs>
+  <rect width="100%" height="100%" fill="white"/>
+  <text x="40" y="48" class="title">RLHF versus RLVR</text>
+  
+<rect x="50" y="100" width="500" height="500" class="warn"/>
+<text x="300" y="145" text-anchor="middle" class="label">RLHF</text>
+<rect x="110" y="190" width="380" height="70" class="box"/><text x="300" y="233" text-anchor="middle" class="text">Human preference comparisons</text>
+<rect x="110" y="305" width="380" height="70" class="box"/><text x="300" y="348" text-anchor="middle" class="text">Learned reward model rφ</text>
+<rect x="110" y="420" width="380" height="70" class="bad"/><text x="300" y="452" text-anchor="middle" class="text">Proxy can have blind spots</text><text x="300" y="477" text-anchor="middle" class="small">reward hacking risk</text>
+<path d="M300 260 L300 305" class="arrow"/><path d="M300 375 L300 420" class="arrow"/>
+<rect x="650" y="100" width="500" height="500" class="good"/>
+<text x="900" y="145" text-anchor="middle" class="label">RLVR</text>
+<rect x="710" y="190" width="380" height="70" class="box"/><text x="900" y="233" text-anchor="middle" class="text">Gold answers, tests, proof checker</text>
+<rect x="710" y="305" width="380" height="70" class="box"/><text x="900" y="348" text-anchor="middle" class="text">Programmatic verifier</text>
+<rect x="710" y="420" width="380" height="70" class="good"/><text x="900" y="452" text-anchor="middle" class="text">Direct correctness signal</text><text x="900" y="477" text-anchor="middle" class="small">narrow but externally grounded</text>
+<path d="M900 260 L900 305" class="arrow"/><path d="M900 375 L900 420" class="arrow"/>
+
+</svg>

@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#333"/>
+    </marker>
+    <style>
+      .title { font: 700 28px Arial, sans-serif; fill:#111; }
+      .label { font: 600 20px Arial, sans-serif; fill:#111; }
+      .text { font: 17px Arial, sans-serif; fill:#222; }
+      .small { font: 15px Arial, sans-serif; fill:#333; }
+      .box { fill:#f7f7f7; stroke:#333; stroke-width:2; rx:16; }
+      .soft { fill:#eef3f8; stroke:#334; stroke-width:2; rx:16; }
+      .good { fill:#eef7ef; stroke:#355e3b; stroke-width:2; rx:16; }
+      .warn { fill:#fff5e6; stroke:#8a5a00; stroke-width:2; rx:16; }
+      .bad { fill:#fdeeee; stroke:#8b2f2f; stroke-width:2; rx:16; }
+      .arrow { stroke:#333; stroke-width:3; fill:none; marker-end:url(#arrow); }
+      .thin { stroke:#555; stroke-width:2; fill:none; marker-end:url(#arrow); }
+    </style>
+  </defs>
+  <rect width="100%" height="100%" fill="white"/>
+  <text x="40" y="48" class="title">Choosing the algorithm</text>
+  
+<rect x="430" y="80" width="340" height="85" class="soft"/><text x="600" y="130" text-anchor="middle" class="label">What does the reward look like?</text>
+<rect x="90" y="250" width="380" height="100" class="warn"/><text x="280" y="290" text-anchor="middle" class="label">Dense / per-step</text><text x="280" y="320" text-anchor="middle" class="small">meaningful signal throughout episode</text>
+<rect x="730" y="250" width="380" height="100" class="good"/><text x="920" y="290" text-anchor="middle" class="label">Terminal / verifiable</text><text x="920" y="320" text-anchor="middle" class="small">one checkable outcome</text>
+<path d="M520 165 C420 205 330 215 280 250" class="arrow"/><path d="M680 165 C780 205 870 215 920 250" class="arrow"/>
+<rect x="90" y="450" width="380" height="100" class="box"/><text x="280" y="490" text-anchor="middle" class="label">Are trajectories expensive?</text><text x="280" y="520" text-anchor="middle" class="small">long control episodes, games, robotics</text>
+<rect x="730" y="450" width="380" height="100" class="box"/><text x="920" y="490" text-anchor="middle" class="label">Are rollouts cheap and parallel?</text><text x="920" y="520" text-anchor="middle" class="small">many LLM responses per prompt</text>
+<path d="M280 350 L280 450" class="arrow"/><path d="M920 350 L920 450" class="arrow"/>
+<rect x="90" y="650" width="380" height="100" class="warn"/><text x="280" y="710" text-anchor="middle" class="label">Choose PPO</text>
+<rect x="730" y="650" width="380" height="100" class="good"/><text x="920" y="710" text-anchor="middle" class="label">Choose GRPO</text>
+<path d="M280 550 L280 650" class="arrow"/><path d="M920 550 L920 650" class="arrow"/>
+
+</svg>
