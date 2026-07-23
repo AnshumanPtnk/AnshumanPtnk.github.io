@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 690" font-family="Helvetica, Arial, sans-serif">
+  <rect width="1200" height="690" fill="#fafaf9"/>
+  <text x="600" y="42" text-anchor="middle" font-size="23" font-weight="700" fill="#1e293b">The Two Ways Importance Sampling Fails</text>
+  <text x="600" y="67" text-anchor="middle" font-size="13" fill="#64748b">Missing support is invalid; weak overlap is valid but unstable</text>
+
+  <rect x="45" y="105" width="535" height="505" rx="16" fill="#ffffff" stroke="#dc2626" stroke-width="2"/>
+  <rect x="45" y="105" width="535" height="52" rx="16" fill="#fee2e2"/>
+  <path d="M45 140 L45 157 L580 157 L580 140" fill="#fee2e2"/>
+  <text x="312" y="138" text-anchor="middle" font-size="17" font-weight="700" fill="#991b1b">1. Missing support — invalid</text>
+  <line x1="90" y1="505" x2="540" y2="505" stroke="#94a3b8" stroke-width="1.5"/>
+  <line x1="110" y1="530" x2="110" y2="185" stroke="#94a3b8" stroke-width="1.5"/>
+  <path d="M110 500 C180 490 220 430 275 330 C340 210 435 195 535 300" fill="none" stroke="#16a34a" stroke-width="5"/>
+  <path d="M110 500 C175 490 225 435 270 350 C300 295 320 285 335 285" fill="none" stroke="#2563eb" stroke-width="5"/>
+  <line x1="335" y1="285" x2="335" y2="505" stroke="#2563eb" stroke-width="2" stroke-dasharray="6 5"/>
+  <text x="450" y="235" font-size="12" font-weight="700" fill="#166534">target p(x) &gt; 0</text>
+  <text x="170" y="390" font-size="12" font-weight="700" fill="#1e40af">proposal q(x)</text>
+  <rect x="350" y="330" width="180" height="88" rx="11" fill="#fee2e2" stroke="#fca5a5"/>
+  <text x="440" y="357" text-anchor="middle" font-size="12" font-weight="700" fill="#991b1b">q(x) = 0</text>
+  <text x="440" y="380" text-anchor="middle" font-size="11" fill="#7f1d1d">This region is never sampled.</text>
+  <text x="440" y="400" text-anchor="middle" font-size="11" fill="#7f1d1d">No weight can recover it.</text>
+  <text x="312" y="565" text-anchor="middle" font-size="12" font-weight="700" fill="#991b1b">p(x) &gt; 0 ⇒ q(x) must be &gt; 0</text>
+
+  <rect x="620" y="105" width="535" height="505" rx="16" fill="#ffffff" stroke="#d97706" stroke-width="2"/>
+  <rect x="620" y="105" width="535" height="52" rx="16" fill="#fef3c7"/>
+  <path d="M620 140 L620 157 L1155 157 L1155 140" fill="#fef3c7"/>
+  <text x="887" y="138" text-anchor="middle" font-size="17" font-weight="700" fill="#92400e">2. Weak overlap — high variance</text>
+  <line x1="665" y1="505" x2="1115" y2="505" stroke="#94a3b8" stroke-width="1.5"/>
+  <line x1="685" y1="530" x2="685" y2="185" stroke="#94a3b8" stroke-width="1.5"/>
+  <path d="M685 500 C760 495 840 455 925 315 C995 200 1070 190 1110 285" fill="none" stroke="#16a34a" stroke-width="5"/>
+  <path d="M685 500 C735 470 765 310 815 245 C860 190 900 310 925 420 C945 485 1000 500 1110 500" fill="none" stroke="#2563eb" stroke-width="5"/>
+  <text x="745" y="240" font-size="12" font-weight="700" fill="#1e40af">proposal q(x)</text>
+  <text x="1008" y="225" font-size="12" font-weight="700" fill="#166534">target p(x)</text>
+  <circle cx="1060" cy="245" r="8" fill="#dc2626"/>
+  <line x1="1060" y1="245" x2="1060" y2="505" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <rect x="930" y="330" width="185" height="92" rx="11" fill="#fee2e2" stroke="#fca5a5"/>
+  <text x="1022" y="357" text-anchor="middle" font-size="12" font-weight="700" fill="#991b1b">rare under q</text>
+  <text x="1022" y="379" text-anchor="middle" font-size="11" fill="#7f1d1d">but important under p</text>
+  <text x="1022" y="400" text-anchor="middle" font-size="11" fill="#7f1d1d">→ enormous weight</text>
+  <text x="887" y="565" text-anchor="middle" font-size="12" font-weight="700" fill="#92400e">One rare draw can dominate the estimate.</text>
+
+  <rect x="175" y="635" width="850" height="36" rx="12" fill="#f1f5f9"/>
+  <text x="600" y="658" text-anchor="middle" font-size="11.5" fill="#475569">A useful proposal needs both complete support and substantial overlap with the target.</text>
+</svg>

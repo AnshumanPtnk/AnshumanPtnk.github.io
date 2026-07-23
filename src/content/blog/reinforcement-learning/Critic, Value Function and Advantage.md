@@ -5,56 +5,37 @@ description: Learning Note 07
 author: Anshuman Patnaik
 pubDatetime: 2026-07-08T20:05:00+05:30
 category: "Reinforcement Learning"
-draft: false
-readingTime: "30 min read"
+readingTime: "38 min read"
 tags:
   - Reinforcement Learning
   - Actor Critic
   - PPO
   - Value Function
   - Advantage
+draft: false
+last_updated: 2026-07-06
 ---
 
 > [!abstract]
-> **Learning Objectives**
+> **The Elevator Pitch**
 >
-> After completing this note, you should be able to:
->
-> - Understand what the critic is actually learning.
-> - Derive why minimizing MSE makes the critic predict the expected return.
-> - Explain why the return is a random variable rather than a fixed quantity.
-> - Understand why the advantage does not converge to zero.
-> - Explain why subtracting the value function reduces variance.
-> - Understand why the critic is always chasing a moving target.
-> - Relate actor-critic methods to GRPO.
+> A critic does not try to reproduce every return observed on every trajectory. It learns the expected return from a state, while an individual rollout can finish above or below that expectation. Their difference is the advantage—the signal that tells the actor whether a sampled action performed better or worse than usual. This note resolves why the advantage does not vanish when the critic becomes accurate, explains how the baseline reduces variance, and connects the learned critic in actor–critic methods with GRPO's group-relative baseline.
 
 ---
 
 # Contents
 
 [[#1. Introduction: The Apparent Paradox]]
-
 [[#2. What Is the Critic Trying to Learn?]]
-
 [[#3. Why the Value Function is an Expectation]]
-
 [[#4. Return is a Random Variable]]
-
 [[#5. Why the Advantage Isn't Zero]]
-
 [[#6. How the Critic Actually Learns]]
-
 [[#7. Why the Critic Is Never Perfect]]
-
 [[#8. Why Advantage Reduces Variance]]
-
 [[#9. Connection with GRPO]]
-
 [[#10. Summary]]
-
 [[#Key Takeaways]]
-
-
 
 ---
 

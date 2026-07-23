@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 620" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#64748b"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="620" fill="#fafaf9"/>
+  <text x="600" y="38" text-anchor="middle" font-size="21" font-weight="700" fill="#1e293b">Why the Partition Function Cancels</text>
+  <text x="600" y="60" text-anchor="middle" font-size="13" fill="#64748b">Both responses share the same prompt x, hence the same intractable Z(x)</text>
+
+  <text x="300" y="98" text-anchor="middle" font-size="14" font-weight="700" fill="#334155">chosen response yw</text>
+  <text x="900" y="98" text-anchor="middle" font-size="14" font-weight="700" fill="#334155">rejected response yl</text>
+
+  <text x="600" y="98" text-anchor="middle" font-size="13" fill="#78716c">same prompt x</text>
+
+  <!-- left track -->
+  <rect x="130" y="115" width="340" height="50" rx="8" fill="#dbeafe" stroke="#3b82f6"/>
+  <text x="300" y="145" text-anchor="middle" font-size="12.5" fill="#1e293b">β · log[ π*(yw|x) / π_ref(yw|x) ]</text>
+
+  <text x="300" y="182" text-anchor="middle" font-size="16" fill="#78716c">+</text>
+
+  <rect x="130" y="195" width="340" height="42" rx="8" fill="none" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="5 4" opacity="0.85"/>
+  <text x="300" y="221" text-anchor="middle" font-size="12" fill="#dc2626">β · log Z(x)</text>
+
+  <text x="300" y="255" text-anchor="middle" font-size="11" fill="#94a3b8">= implicit reward r(x, yw)</text>
+
+  <!-- right track -->
+  <rect x="730" y="115" width="340" height="50" rx="8" fill="#dbeafe" stroke="#3b82f6"/>
+  <text x="900" y="145" text-anchor="middle" font-size="12.5" fill="#1e293b">β · log[ π*(yl|x) / π_ref(yl|x) ]</text>
+
+  <text x="900" y="182" text-anchor="middle" font-size="16" fill="#78716c">+</text>
+
+  <rect x="730" y="195" width="340" height="42" rx="8" fill="none" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="5 4" opacity="0.85"/>
+  <text x="900" y="221" text-anchor="middle" font-size="12" fill="#dc2626">β · log Z(x)</text>
+
+  <text x="900" y="255" text-anchor="middle" font-size="11" fill="#94a3b8">= implicit reward r(x, yl)</text>
+
+  <!-- connecting the two dashed cancel boxes -->
+  <line x1="470" y1="216" x2="730" y2="216" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.6"/>
+  <text x="600" y="207" text-anchor="middle" font-size="11.5" font-weight="700" fill="#dc2626">identical — cancels on subtraction</text>
+
+  <line x1="300" y1="255" x2="300" y2="300" stroke="#64748b" stroke-width="2" marker-end="url(#arrow2)"/>
+  <line x1="900" y1="255" x2="900" y2="300" stroke="#64748b" stroke-width="2" marker-end="url(#arrow2)"/>
+
+  <!-- subtraction operation -->
+  <rect x="330" y="300" width="540" height="60" rx="10" fill="#f1f5f9" stroke="#94a3b8"/>
+  <text x="600" y="325" text-anchor="middle" font-size="13.5" fill="#1e293b">r(x, yw) − r(x, yl)</text>
+  <text x="600" y="345" text-anchor="middle" font-size="11" fill="#78716c">the two β·log Z(x) terms cancel exactly</text>
+
+  <line x1="600" y1="360" x2="600" y2="395" stroke="#64748b" stroke-width="2" marker-end="url(#arrow2)"/>
+
+  <!-- clean result -->
+  <rect x="255" y="395" width="690" height="55" rx="10" fill="#dcfce7" stroke="#16a34a"/>
+  <text x="600" y="428" text-anchor="middle" font-size="13.5" fill="#14532d">β·log-ratio(yw) − β·log-ratio(yl)  — no Z(x) left</text>
+
+  <line x1="600" y1="450" x2="600" y2="485" stroke="#64748b" stroke-width="2" marker-end="url(#arrow2)"/>
+
+  <rect x="330" y="485" width="540" height="55" rx="10" fill="#fef3c7" stroke="#d97706"/>
+  <text x="600" y="518" text-anchor="middle" font-size="13.5" fill="#1e293b">σ( · )  —  Bradley–Terry preference probability</text>
+
+  <text x="600" y="580" text-anchor="middle" font-size="11.5" fill="#94a3b8">Anything that depends on the prompt alone is identical on both sides of a preference comparison, and washes out.</text>
+</svg>

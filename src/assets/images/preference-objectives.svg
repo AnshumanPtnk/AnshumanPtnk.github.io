@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 790" font-family="Helvetica, Arial, sans-serif">
+  <rect width="1200" height="790" fill="#fafaf9"/>
+  <text x="600" y="42" text-anchor="middle" font-size="23" font-weight="700" fill="#1e293b">Four Objectives, Four Definitions of “Better”</text>
+  <text x="600" y="67" text-anchor="middle" font-size="13" fill="#64748b">The data may look similar, but the anchor and score change</text>
+
+  <rect x="45" y="100" width="535" height="285" rx="16" fill="#ffffff" stroke="#2563eb" stroke-width="2"/>
+  <rect x="45" y="100" width="535" height="49" rx="16" fill="#dbeafe"/>
+  <path d="M45 133 L45 149 L580 149 L580 133" fill="#dbeafe"/>
+  <text x="75" y="132" font-size="18" font-weight="700" fill="#1e40af">DPO</text>
+  <rect x="443" y="111" width="112" height="25" rx="12" fill="#eff6ff" stroke="#93c5fd"/>
+  <text x="499" y="128" text-anchor="middle" font-size="10" fill="#1e40af">reference-based</text>
+  <text x="75" y="181" font-size="12" fill="#475569">Implicit reward</text>
+  <text x="75" y="212" font-size="15" font-weight="700" fill="#1e293b">r(y) = β · log [ πθ(y|x) / πref(y|x) ]</text>
+  <line x1="75" y1="231" x2="550" y2="231" stroke="#e2e8f0"/>
+  <text x="75" y="263" font-size="12" fill="#475569">Margin sent to the sigmoid</text>
+  <rect x="75" y="278" width="475" height="50" rx="9" fill="#eff6ff"/>
+  <text x="312" y="309" text-anchor="middle" font-size="14" fill="#1e3a8a">r(chosen) − r(rejected)</text>
+  <text x="75" y="357" font-size="11.5" fill="#64748b">Question: which response improved more relative to the SFT anchor?</text>
+
+  <rect x="620" y="100" width="535" height="285" rx="16" fill="#ffffff" stroke="#16a34a" stroke-width="2"/>
+  <rect x="620" y="100" width="535" height="49" rx="16" fill="#dcfce7"/>
+  <path d="M620 133 L620 149 L1155 149 L1155 133" fill="#dcfce7"/>
+  <text x="650" y="132" font-size="18" font-weight="700" fill="#166534">SimPO</text>
+  <rect x="1015" y="111" width="115" height="25" rx="12" fill="#f0fdf4" stroke="#86efac"/>
+  <text x="1072" y="128" text-anchor="middle" font-size="10" fill="#166534">reference-free</text>
+  <text x="650" y="181" font-size="12" fill="#475569">Implicit reward</text>
+  <text x="650" y="212" font-size="15" font-weight="700" fill="#1e293b">r(y) = β / |y| · log πθ(y|x)</text>
+  <line x1="650" y1="231" x2="1125" y2="231" stroke="#e2e8f0"/>
+  <text x="650" y="263" font-size="12" fill="#475569">Margin sent to the sigmoid</text>
+  <rect x="650" y="278" width="475" height="50" rx="9" fill="#f0fdf4"/>
+  <text x="887" y="309" text-anchor="middle" font-size="14" fill="#14532d">r(chosen) − r(rejected) − γ</text>
+  <text x="650" y="357" font-size="11.5" fill="#64748b">Question: is the winner better per token by at least the target margin?</text>
+
+  <rect x="45" y="425" width="535" height="285" rx="16" fill="#ffffff" stroke="#7c3aed" stroke-width="2"/>
+  <rect x="45" y="425" width="535" height="49" rx="16" fill="#ede9fe"/>
+  <path d="M45 458 L45 474 L580 474 L580 458" fill="#ede9fe"/>
+  <text x="75" y="457" font-size="18" font-weight="700" fill="#6d28d9">KTO</text>
+  <rect x="443" y="436" width="112" height="25" rx="12" fill="#f5f3ff" stroke="#c4b5fd"/>
+  <text x="499" y="453" text-anchor="middle" font-size="10" fill="#6d28d9">unpaired labels</text>
+  <text x="75" y="506" font-size="12" fill="#475569">Policy/reference log-ratio compared with KL point z₀</text>
+  <rect x="75" y="526" width="475" height="75" rx="9" fill="#f5f3ff"/>
+  <text x="312" y="555" text-anchor="middle" font-size="13.5" fill="#4c1d95">good:  λD · σ(β[r(y) − z₀])</text>
+  <text x="312" y="582" text-anchor="middle" font-size="13.5" fill="#4c1d95">bad:   λU · σ(β[z₀ − r(y)])</text>
+  <text x="75" y="635" font-size="11.5" fill="#64748b">Question: is this single answer a gain or loss around the reference point?</text>
+  <text x="75" y="661" font-size="11" fill="#94a3b8">The good and bad examples need not answer the same prompt.</text>
+
+  <rect x="620" y="425" width="535" height="285" rx="16" fill="#ffffff" stroke="#d97706" stroke-width="2"/>
+  <rect x="620" y="425" width="535" height="49" rx="16" fill="#fef3c7"/>
+  <path d="M620 458 L620 474 L1155 474 L1155 458" fill="#fef3c7"/>
+  <text x="650" y="457" font-size="18" font-weight="700" fill="#92400e">ORPO</text>
+  <rect x="1015" y="436" width="115" height="25" rx="12" fill="#fffbeb" stroke="#fcd34d"/>
+  <text x="1072" y="453" text-anchor="middle" font-size="10" fill="#92400e">one-stage SFT</text>
+  <text x="650" y="506" font-size="12" fill="#475569">Chosen NLL plus a contrast between sequence odds</text>
+  <rect x="650" y="526" width="475" height="75" rx="9" fill="#fffbeb"/>
+  <text x="887" y="555" text-anchor="middle" font-size="13.5" fill="#78350f">L = LSFT(chosen) + λ · LOR</text>
+  <text x="887" y="582" text-anchor="middle" font-size="13" fill="#78350f">LOR = −log σ(log odds(chosen) − log odds(rejected))</text>
+  <text x="650" y="635" font-size="11.5" fill="#64748b">Question: can SFT learn the winner while a weak penalty rejects the loser?</text>
+  <text x="650" y="661" font-size="11" fill="#94a3b8">No frozen reference and no separate alignment pass.</text>
+
+  <rect x="205" y="744" width="790" height="28" rx="14" fill="#f1f5f9"/>
+  <text x="600" y="763" text-anchor="middle" font-size="11.5" fill="#475569">All four are ordinary differentiable fine-tuning losses; none requires online rollouts during optimization.</text>
+</svg>

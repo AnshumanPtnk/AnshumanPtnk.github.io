@@ -1,12 +1,10 @@
 ---
 title: Reinforcement Learning from Human Feedback
 subtitle: From Human Preferences to Token-Level Policy Updates
-description: A dense, intuitive account of reward-model training, the Bradley–Terry objective, token-level rewards, PPO optimisation, the two KL mechanisms, and reward hacking in RLHF.
+description: An intuitive account of reward-model training, the Bradley–Terry objective, token-level rewards, PPO optimisation, reference-policy regularisation, and reward hacking in RLHF.
 author: Anshuman Patnaik
-pubDatetime: 2026-07-10T16:40:00+05:30
 category: "Reinforcement Learning"
-draft: false
-readingTime: "30 min read"
+readingTime: "52 min read"
 tags:
   - Reinforcement Learning
   - RLHF
@@ -14,70 +12,53 @@ tags:
   - PPO
   - Bradley Terry
   - KL Divergence
+draft: false
+pubDatetime: 2026-07-13
 ---
 
 # Reinforcement Learning from Human Feedback
 
 > [!abstract]
-> **Mission Statement**
+> **The Elevator Pitch**
 >
-> Reinforcement Learning from Human Feedback converts judgments that humans can provide reliably—comparisons between answers—into a trainable reward model, then uses that model to improve a language policy without allowing the policy to exploit the reward model or drift arbitrarily far from fluent language. The complete system is not one loss function. It is a pipeline in which preference data trains a scalar judge, the judge supplies a terminal reward, token-level KL penalties turn that sparse verdict into a controlled trajectory reward, a critic converts returns into advantages, and PPO performs bounded policy updates.
+> RLHF turns human comparisons between candidate responses into a learning signal. A reward model first learns to predict those preferences. A language-model policy is then trained to earn higher predicted reward, usually with PPO, while a frozen reference policy discourages excessive drift. This note follows that pipeline from preference data to token-level policy updates and explains where its safeguards help—and where they do not provide guarantees.
 
 # Contents
 
 [[#1. Why RLHF Exists]]
-
 [[#2. The RLHF Pipeline]]
-
 [[#3. Human Feedback Is Comparative]]
-
 [[#4. The Reward Model: A Transformer with a Scalar Head]]
-
 [[#5. Why the Reward Is Read from the Final Token]]
-
 [[#6. From Preferences to the Bradley–Terry Loss]]
-
 [[#7. Why Negative Log-Likelihood Is Used]]
-
 [[#8. What the Bradley–Terry Gradient Learns]]
-
 [[#9. Reward Is Relative, Not Absolute]]
-
 [[#10. From a Sequence-Level Verdict to Token-Level Rewards]]
-
 [[#11. Return Propagation and Token-Level Credit Assignment]]
-
 [[#12. The Critic and the Advantage]]
-
 [[#13. A Complete Four-Token Example]]
-
 [[#14. PPO Consumes the Token Advantages]]
-
-[[#15. The Two KL Mechanisms in RLHF]]
-
-[[#16. Why Both KL Mechanisms Are Necessary]]
-
+[[#15. Two Different Proximity Controls]]
+[[#16. Why the Controls Are Complementary]]
 [[#17. Reward Hacking and Goodhart's Law]]
-
 [[#18. The Over-Optimisation Curve]]
-
 [[#19. Defences Against Reward Hacking]]
-
 [[#20. The Complete RLHF Algorithm]]
-
 [[#21. Summary]]
-
 [[#22. Companion Questions and Answers]]
 
 ---
 
 # 1. Why RLHF Exists
 
-A pretrained language model learns to predict text, and supervised fine-tuning teaches it to imitate examples of desirable behaviour. Neither stage directly answers a more difficult question: among several plausible answers to the same prompt, which one would a human actually prefer? Correctness, relevance, honesty, tone, harmlessness, and usefulness are difficult to compress into a hand-written objective. Even when these qualities can be described verbally, they cannot be evaluated reliably by a simple rule over every possible response.
+Pretraining teaches a language model to continue text. Supervised fine-tuning (SFT) then teaches it to imitate demonstrations of desired behaviour. These stages can produce a capable assistant, but they do not directly optimise a human preference among several plausible responses.
 
-RLHF begins from a practical asymmetry. Humans are inconsistent when asked to assign absolute scores such as 7.3 out of 10, but they are considerably better at selecting the better of two responses shown side by side. The training signal is therefore not an absolute label but a preference relation. A human sees two answers to the same prompt and chooses a winner. The system then learns a scalar function whose only responsibility is to reproduce these orderings.
+RLHF adds that missing signal through comparisons. For a given prompt, annotators rank candidate responses or select the better one. Pairwise judgments are useful because the annotator only needs to express an ordering; no universal numerical scale for qualities such as helpfulness, correctness, tone, and safety is required.
 
-Once trained, that scalar function becomes a reward model. It replaces repeated human evaluation during policy optimisation, allowing millions of responses to be scored automatically. The live policy is then improved with reinforcement learning, typically through a PPO-style update. Because the reward model is an imperfect proxy for human judgment, the policy is also penalised for drifting too far from the supervised model from which it started.
+A reward model learns to predict these observed preferences. Once trained, it can score newly generated responses without asking a human to label every rollout. The policy is then optimised against this learned score, commonly with PPO. Because the reward model is only a proxy for the preferences represented in its data, the optimisation also includes regularisation toward a frozen reference policy.
+
+This procedure can improve responses, but it does not guarantee alignment or prevent reward hacking. Its components should be understood as a sequence of modelling and optimisation choices, each with its own assumptions.
 
 The complete architecture is best understood as a sequence of translations:
 
@@ -99,13 +80,13 @@ clipped PPO updates
 an improved but anchored language policy
 ```
 
-Each arrow solves a different problem. Preference modelling turns comparisons into a differentiable objective. The reward head turns a transformer representation into one score. Return propagation solves temporal credit assignment. The critic reduces variance. PPO controls local update size. The reference-model KL penalty controls cumulative drift and reduces reward hacking.
+Each arrow solves a different problem. Preference modelling turns comparisons into a differentiable objective. The reward head turns a transformer representation into one score. Return propagation supplies a trajectory-level credit signal. The critic reduces variance. PPO clipping moderates optimisation on each rollout batch. Reference-policy KL regularisation discourages cumulative drift and can reduce reward-hacking risk.
 
 # 2. The RLHF Pipeline
 
 The core RLHF workflow contains three major training phases. A language model is first supervised on demonstrations, a reward model is then trained from human comparisons, and finally the policy is optimised against the frozen reward model while remaining close to a frozen reference model.
 
-![Complete RLHF pipeline](../../../assets/images/rlhf-complete-pipeline.svg)
+![Complete RLHF pipeline|697](../../../assets/images/rlhf-complete-pipeline.svg)
 
 The supervised model serves several roles. It is the initial policy because it already produces coherent answers. It is also copied into the frozen reference policy, which anchors the RL phase. A separate copy of its transformer trunk is fitted with a scalar reward head and trained on preference pairs. During PPO, the policy and critic change, while the reward model and reference model remain frozen.
 
@@ -197,7 +178,7 @@ $$
 
 weights, while the scalar head contains only $769$ parameters including its bias.
 
-![Reward model architecture](../../../assets/images/reward-model-head.svg)
+![Reward model architecture|697](../../../assets/images/reward-model-head.svg)
 
 The trunk is normally initialized from the supervised model rather than from random parameters. Preference datasets are expensive and comparatively small. Starting from the supervised model means the trunk already represents grammar, semantics, world knowledge, instruction following, and response structure. Reward-model training therefore teaches judgment on top of language rather than attempting to relearn language from pairwise comparisons.
 
@@ -376,7 +357,7 @@ The companion's illustrative comparison makes this concentration of learning exp
 
 The hard pair contributes roughly thirty-three times more loss and twenty-five times more gradient than the easy pair. The loss automatically routes capacity toward unsettled comparisons.
 
-![Bradley–Terry loss and gradient](../../../assets/images/bradley-terry-loss.svg)
+![Bradley–Terry loss and gradient|697](../../../assets/images/bradley-terry-loss.svg)
 
 # 9. Reward Is Relative, Not Absolute
 
@@ -433,7 +414,7 @@ r_\phi(x,y)\,\mathbf{1}[t=T].
 }
 $$
 
-The first term is a token-level KL-style toll relative to the frozen reference model. The second term places the reward-model score only on the final token through the indicator $\mathbf{1}[t=T]$.
+The first term is a sampled log-probability-ratio adjustment relative to the frozen reference model. The second term places the reward-model score only on the final token through the indicator $\mathbf{1}[t=T]$.
 
 For $t<T$,
 
@@ -463,9 +444,25 @@ R_T
 r_\phi(x,y).
 $$
 
-The local reward is therefore dense because every token pays a drift toll, but the preference verdict remains sparse and terminal.
+The reference adjustment is available at every token, while the preference verdict remains sparse and terminal. An important subtlety is that the sampled log ratio can be positive or negative for an individual token. It becomes a non-negative KL divergence only after taking an expectation over tokens sampled from the current policy:
 
-![Per-token reward construction](../../../assets/images/per-token-reward-flow.svg)
+$$
+\mathbb E_{a_t\sim\pi_\theta}
+\left[
+\log\pi_\theta(a_t\mid s_t)
+-
+\log\pi_{\mathrm{ref}}(a_t\mid s_t)
+\right]
+=
+D_{\mathrm{KL}}
+\left(
+\pi_\theta(\cdot\mid s_t)
+\|
+\pi_{\mathrm{ref}}(\cdot\mid s_t)
+\right).
+$$
+
+![Per-token reward construction|697](../../../assets/images/per-token-reward-flow.svg)
 
 # 11. Return Propagation and Token-Level Credit Assignment
 
@@ -501,7 +498,7 @@ G_t
 R_t+G_{t+1}.
 $$
 
-This backward accumulation spreads the terminal reward-model verdict into every earlier token's return. An early token inherits the final score because that token helped determine the prefix from which all later tokens were generated. Its return is the final verdict minus the KL tolls paid from that point onward.
+This backward accumulation spreads the terminal reward-model verdict into every earlier token's return. An early token inherits the final score because that token helped determine the prefix from which all later tokens were generated. Its return combines the final verdict with the sampled reference-policy adjustments from that point onward.
 
 This does not provide perfect causal attribution. Every earlier decision receives a return influenced by everything that followed. The critic and advantage reduce the variance of this broad credit assignment, but RLHF still faces a difficult temporal-credit problem. The mechanism is nevertheless principled: each token is evaluated by the total future consequence of choosing it.
 
@@ -562,7 +559,7 @@ $$
 r_\phi=2.0.
 $$
 
-Suppose the combined token rewards, including KL tolls and the terminal reward, are
+Suppose the combined token rewards, including sampled reference-policy adjustments and the terminal reward, are
 
 $$
 R
@@ -647,7 +644,7 @@ $$
 
 The final token carries the large terminal reward but still receives a negative advantage because the critic expected $1.95$ and the realised return was only $1.89$. PPO therefore slightly decreases its probability. The early tokens receive positive advantages because their returns exceeded expectation. This example demonstrates why the terminal reward is not mechanically assigned as positive credit to the final token. What matters is return relative to the critic's baseline.
 
-![Four-token reward, return, value, and advantage](../../../assets/images/token-credit-example.svg)
+![Four-token reward, return, value, and advantage|697](../../../assets/images/token-credit-example.svg)
 
 # 14. PPO Consumes the Token Advantages
 
@@ -698,35 +695,45 @@ $$
 
 The actor and critic therefore consume different views of the same generated response. The actor uses advantages to improve token probabilities, while the critic uses returns to improve future expectations.
 
-# 15. The Two KL Mechanisms in RLHF
+# 15. Two Different Proximity Controls
 
-RLHF contains two distinct mechanisms that are often described with the same word, “KL.” They differ in reference point, time scale, mathematical location, and purpose.
+PPO clipping and reference-policy KL regularisation are sometimes discussed together because both discourage aggressive policy change. They are not two KL mechanisms.
 
-![The two KL mechanisms](../../../assets/images/two-kls.svg)
+![PPO clipping and reference-policy KL regularisation|697](../../../assets/images/two-kls.svg)
 
-The first mechanism is the PPO trust-region approximation. It compares the current policy $\pi_\theta$ with $\pi_{\mathrm{old}}$, the policy that generated the current rollout batch. Its purpose is local stability. The reference refreshes every batch. The ratio clip lives inside the policy objective and limits how much one batch can change the policy.
+**PPO clipping** uses the likelihood ratio
 
-The second mechanism is the reference-policy leash. It compares the current policy with $\pi_{\mathrm{ref}}$, the frozen supervised model. Its purpose is global anchoring. The reference remains fixed throughout the RL run. The penalty lives inside the token reward and controls cumulative drift from the model whose language behaviour and output distribution are trusted.
+$$
+\rho_t(\theta)
+=
+\frac{\pi_\theta(a_t\mid s_t)}
+{\pi_{\mathrm{old}}(a_t\mid s_t)}
+$$
 
-| Property | PPO clip | Reference KL leash |
+inside the surrogate objective. Here $\pi_{\mathrm{old}}$ is the behaviour policy that generated the current rollout batch. Clipping reduces the incentive for that batch to push sampled-action ratios farther beyond a chosen interval. It is a heuristic for conservative optimisation; it is not itself a KL divergence and does not impose a hard bound on the policy's KL change.
+
+**Reference-policy regularisation** compares the live policy with a frozen policy $\pi_{\mathrm{ref}}$, usually derived from the SFT model. Its expected log-ratio is a genuine KL divergence. Adding it to the reward discourages cumulative movement away from the reference distribution, but it is a soft penalty rather than a guarantee that the policy remains within a fixed distance.
+
+| Property | PPO ratio clip | Reference KL regularisation |
 |---|---|---|
-| Reference | $\pi_{\mathrm{old}}$ | $\pi_{\mathrm{ref}}$ |
-| Reference lifetime | One rollout batch | Entire RL run |
-| Location | Policy objective | Token reward |
-| Controls | Local update size | Global distance from SFT |
-| Main failure without it | Unstable batch updates | Reward hacking and behavioural drift |
+| Comparison policy | $\pi_{\mathrm{old}}$ | $\pi_{\mathrm{ref}}$ |
+| Comparison lifetime | Current rollout batch | Usually the full RL run |
+| Mathematical form | Clipped likelihood ratio | Expected log-probability ratio |
+| Location | Actor surrogate objective | Reward or objective |
+| Primary role | Moderate batch reuse and updates | Discourage drift from the reference |
+| Hard guarantee? | No | No; it is a soft penalty |
 
-The mnemonic is:
+The useful mnemonic is:
 
-> **The clip limits the next step. The leash limits the total journey.**
+> **The clip moderates optimisation on the current batch. The reference KL discourages the accumulated policy from moving far from its anchor.**
 
-# 16. Why Both KL Mechanisms Are Necessary
+# 16. Why the Controls Are Complementary
 
-A sequence of small steps can still travel arbitrarily far. The PPO clip can make every update conservative without keeping the final policy close to the supervised model. Over many batches, the policy may slowly enter regions where the reward model has never been validated. The reference KL penalty is therefore required even when clipping works perfectly.
+A sequence of moderate PPO updates can still move the policy far from its initial SFT model. Clipping only compares the current policy with the behaviour policy for one rollout batch; when a fresh batch is collected, that comparison point changes. A frozen reference policy provides a persistent anchor across batches.
 
-The reverse is also true. A policy may remain globally near the reference while suffering one destructive update from a high-advantage batch. The reference penalty audits distance from home but does not guarantee that each optimization step is smooth or that importance sampling remains valid. The PPO clip controls this local failure.
+The reverse distinction matters too. Reference KL regularisation penalises departure from the SFT policy, but it does not make repeated optimisation on one rollout batch reliable. PPO's ratio objective addresses the local mismatch between the current policy and the policy that generated that batch.
 
-A useful analogy is to separate speed from location. The PPO clip is a speed limit: it reduces the violence of each move. The reference KL is a boundary around the neighbourhood: it limits where the sequence of moves may ultimately go. A speed limit does not keep a traveller in town, and a town boundary does not prevent a crash.
+Neither mechanism supplies a strict trust region. Implementations may additionally monitor an approximate KL between $\pi_\theta$ and $\pi_{\mathrm{old}}$, stop an epoch early, adapt coefficients, or limit gradient norms. Those are separate engineering controls.
 
 The reference penalty can be expressed as an expected KL divergence,
 
@@ -740,7 +747,7 @@ D_{\mathrm{KL}}
 \right),
 $$
 
-or estimated on sampled tokens using the log-probability difference. Because the toll is paid at every generated token, a small per-token cost can dominate when accumulated across a long response. With $\beta=0.2$ and an average token KL of $0.4$ nats, the cost is $-0.08$ per token. Across $200$ tokens, this is approximately $-16$, which can easily outweigh a sequence-level reward-model score near $1$ or $2$.
+or estimated on sampled tokens using the log-probability difference. Although a single sampled term can have either sign, its expectation under the current policy is non-negative. A positive average contribution can become substantial when accumulated across a long response. For example, with $\beta=0.2$ and an average token KL of $0.4$ nats, the expected adjustment is $-0.08$ per token. Across $200$ tokens, this is approximately $-16$, which can outweigh a sequence-level reward-model score near $1$ or $2$.
 
 # 17. Reward Hacking and Goodhart's Law
 
@@ -783,13 +790,13 @@ The companion provides an illustrative schematic:
 
 The values are illustrative, but the shape is the important point. The proxy rises monotonically because PPO is trained to increase it. True quality improves initially, peaks, and then falls as further gains are purchased by exploiting reward-model error.
 
-![Over-optimisation and reward hacking](../../../assets/images/reward-hacking-curve.svg)
+![Over-optimisation and reward hacking|697](../../../assets/images/reward-hacking-curve.svg)
 
 Monitoring only reward-model score would suggest training forever. Human evaluation, held-out judges, KL budgets, and early stopping are needed to identify the region where proxy improvement still corresponds to genuine improvement.
 
 # 19. Defences Against Reward Hacking
 
-The first defence is the reference KL leash. By charging the policy for cumulative deviation from the supervised model, it keeps generation within a region where the reward model and language model are more likely to remain reliable.
+The first defence is reference-policy KL regularisation. By charging the policy for deviation from the supervised model, it discourages generation from moving into regions where the reward model may be less reliable. This lowers risk but cannot guarantee that reward hacking will not occur.
 
 The second defence is early stopping based on independent quality signals. Reward-model score cannot reveal its own exploitation. Periodic human evaluation or a held-out evaluator can detect when real quality stops improving even as proxy reward continues rising.
 
@@ -838,7 +845,7 @@ repeat for each RL iteration:
 
     for every generated token:
         compute reference log-probability
-        compute KL toll against pi_ref
+        compute sampled log-ratio adjustment against pi_ref
         place reward-model score on final token only
 
     compute token returns backward
@@ -856,9 +863,9 @@ repeat for each RL iteration:
     collect fresh responses with improved policy
 ```
 
-![RLHF algorithm flow](../../../assets/images/rlhf-algorithm-flow.svg)
+![RLHF algorithm flow|697](../../../assets/images/rlhf-algorithm-flow.svg)
 
-The two frozen objects play different roles. The reward model defines what the system currently believes humans prefer. The reference policy defines the behavioural region within which that belief is trusted. The actor searches for better responses, the critic predicts token-level returns, and PPO ensures that each batch produces a bounded update.
+The two frozen objects play different roles. The reward model approximates the preferences represented in its training data. The reference policy provides a persistent behavioural anchor. The actor searches for better responses, the critic predicts token-level returns, and PPO clipping makes repeated optimisation on a rollout batch more conservative without guaranteeing a bounded update.
 
 # 21. Summary
 
@@ -866,12 +873,12 @@ RLHF starts from comparisons because relative judgment is easier and more reliab
 
 The learned reward is relative rather than absolute because the preference loss depends only on score differences. During policy optimisation, the frozen reward model emits one terminal verdict for a complete response. A token-level KL penalty against the frozen supervised reference is added at every step, returns propagate the terminal reward backward, and the critic converts those returns into token-level advantages.
 
-PPO then updates the policy using ratios against the behaviour policy that generated the rollout. The clip limits local update size, while the reference KL leash limits cumulative drift. These mechanisms are not interchangeable. One stabilises each optimisation step; the other keeps the full training run near a trustworthy linguistic and reward-model regime.
+PPO then updates the policy using ratios against the behaviour policy that generated the rollout. Ratio clipping moderates optimisation on the current batch, while reference KL regularisation discourages cumulative drift. These controls are not interchangeable, and neither creates a hard distance bound.
 
 Because the reward model is an imperfect proxy, aggressive optimisation can produce reward hacking. The proxy score may continue rising after actual quality has peaked. KL anchoring, early stopping, stronger reward models, human evaluation, and iterative retraining are all attempts to prevent the policy from asking the reward model questions far outside the region in which it was validated.
 
 > [!important]
-> RLHF is a chain of relative judgments. Humans compare responses; the reward model learns score differences; the critic compares realised return with expected return; PPO compares the current policy with the rollout policy; and the KL leash compares the live policy with the supervised reference. Stability comes from preserving the meaning of each comparison as optimisation proceeds.
+> RLHF is a chain of relative judgments. Humans compare responses; the reward model learns score differences; the critic compares realised return with expected return; PPO compares the current policy with the rollout policy; and reference regularisation compares the live policy with the supervised anchor. Each comparison serves a different role.
 
 # 22. Companion Questions and Answers
 
@@ -1258,7 +1265,7 @@ The hard pair in the companion has gap $g=0.2$. Multiply both reward scores by $
 
 ### Question 7 — What happens if the reward-model score falls from $2.0$ to $1.0$?
 
-For the response “Gravity pulls objects down,” keep the same KL tolls, $\gamma=1$, and critic predictions
+For the response “Gravity pulls objects down,” keep the same sampled reference-policy adjustments, $\gamma=1$, and critic predictions
 
 $$
 V=
@@ -1357,13 +1364,13 @@ but reduce the reward-model score from $2.0$ to $1.0$. Recompute the returns and
 >
 > Every token now has a **negative advantage**. The weaker terminal reward reduces the return received by every earlier token because the final verdict is propagated backward through the entire generated sequence. At the same time, the critic continues to predict the higher returns associated with the previous setting. The realised returns therefore fall below expectation at every token position.
 >
-> PPO interprets this as evidence that the complete sampled trajectory performed worse than expected. It would consequently reduce the probabilities of all four sampled tokens under similar states, subject to the clipping constraint that prevents any single rollout batch from producing an excessively large update.
+> PPO interprets this as evidence that the complete sampled trajectory performed worse than expected. It would consequently reduce the probabilities of all four sampled tokens under similar states. Clipping can remove the incentive to push particular sampled-action ratios farther beyond the clipping interval, but it does not guarantee a small overall policy update.
 >
 > This example highlights the difference between the **reward-model verdict** and the **advantage**. A positive sequence-level reward does not guarantee positive token-level advantages. What matters is whether the realised return exceeds the critic's expectation. Here, the response still receives a positive terminal reward, but it is not high enough to meet the baseline established by the critic.
 
 ### Question 8 — What happens when the KL coefficient doubles?
 
-Suppose $\beta$ doubles from $0.2$ to $0.4$ while the reward-model score remains $2.0$. What happens to the KL tolls and to the advantage of the token “down”?
+Suppose $\beta$ doubles from $0.2$ to $0.4$ while the reward-model score remains $2.0$. What happens to the sampled reference-policy adjustments and to the advantage of the token “down”?
 
 > [!success]- Answer
 >
@@ -1380,7 +1387,7 @@ Suppose $\beta$ doubles from $0.2$ to $0.4$ while the reward-model score remains
 > \right].
 > $$
 >
-> Since this term is **linear in the coefficient** $\beta$, doubling $\beta$ approximately doubles the KL penalty incurred at every token. In the worked example, the original KL tolls
+> For fixed sampled log ratios, this term is **linear in the coefficient** $\beta$, so doubling $\beta$ exactly doubles each reference-policy adjustment in this worked example. The original adjustments
 >
 > $$
 > \{0.00,\,-0.08,\,-0.02,\,-0.11\}
@@ -1432,7 +1439,7 @@ Suppose $\beta$ doubles from $0.2$ to $0.4$ while the reward-model score remains
 >
 > Because the advantage is now **more negative**, PPO applies a stronger update to **decrease the probability** of generating the token **"down"** under similar circumstances. More generally, every token whose return is reduced by the increased KL penalty receives a smaller—or more negative—advantage.
 >
-> This example illustrates the role of $\beta$ as the strength of the **reference-policy leash**. Increasing $\beta$ makes every deviation from the frozen supervised model more expensive, so the policy must obtain a correspondingly larger reward-model improvement before a behavioural change becomes worthwhile. As a result, learning becomes more conservative, the policy remains closer to the SFT reference, and the risk of reward hacking is reduced.
+> This example illustrates the role of $\beta$ as the strength of **reference-policy regularisation**. Increasing $\beta$ makes deviation from the frozen supervised model more expensive in expectation, so the policy must obtain a correspondingly larger reward-model improvement before a behavioural change becomes worthwhile. As a result, learning tends to become more conservative, the policy tends to remain closer to the SFT reference, and the risk of reward hacking may be reduced.
 >
 > However, this protection comes at a cost. If $\beta$ becomes too large, the KL penalty dominates the reward-model signal, leaving little incentive for the policy to discover genuinely preferred behaviours. In the limiting case, PPO performs only negligible updates, and the final policy remains almost identical to the supervised fine-tuned model.
 
@@ -1537,7 +1544,7 @@ Why does retraining the reward model on the current policy's outputs address rew
 >
 > Effective iterative retraining therefore requires more than simply collecting additional labels. High-quality annotation guidelines, domain experts for specialised topics, disagreement analysis between annotators, adversarial evaluation, calibration studies, and rigorous quality-control procedures are essential to ensure that the updated reward model continues to approximate genuine human preferences rather than merely amplifying systematic biases in the evaluation process.
 
-## 22.5 The Two KL Mechanisms
+## 22.5 PPO Clipping and Reference KL
 
 ### Question 13 — What happens if the reference KL coefficient is extremely large?
 
@@ -1561,7 +1568,7 @@ If $\beta$ is set to a very large value, what happens to the RLHF objective and 
 >
 > In this regime, the reward-model score has little influence on learning because any improvement it provides is overshadowed by the much larger KL cost. The policy therefore becomes extremely conservative, making only tiny adjustments to its behaviour and staying close to the supervised fine-tuned checkpoint.
 >
-> This strong anchoring greatly reduces the risk of reward hacking, since the policy is prevented from exploring regions where the reward model may be unreliable. However, it also limits the primary objective of RLHF: learning human preferences beyond what was captured during supervised fine-tuning. The policy may ignore genuinely beneficial improvements simply because the cost of moving away from the reference model is too high.
+> This strong anchoring can reduce the risk of reward hacking because the policy is strongly discouraged from exploring regions where the reward model may be unreliable. However, it also limits the primary objective of RLHF: learning preferences beyond what was captured during supervised fine-tuning. The policy may ignore genuinely beneficial improvements simply because the cost of moving away from the reference model is too high.
 >
 > In the limiting case where $\beta$ becomes extremely large, the optimization effectively collapses to supervised fine-tuning. The reward model contributes almost no practical learning signal, the policy changes very little throughout PPO training, and RLHF provides little benefit beyond preserving the original SFT behaviour.
 
@@ -1571,19 +1578,19 @@ If $\beta=0$, what remains to keep the policy close, and what failure becomes po
 
 > [!success]- Answer
 >
-> Setting $\beta = 0$ removes the **reference KL penalty**, which acts as the global behavioural leash to the frozen supervised model. The policy is therefore no longer penalized for drifting away from $\pi_{\mathrm{ref}}$.
+> Setting $\beta = 0$ removes the **reference KL penalty**, which acts as a persistent behavioural anchor to the frozen supervised model. The policy is therefore no longer penalized for drifting away from $\pi_{\mathrm{ref}}$.
 >
-> The PPO clipping mechanism still remains active, but it serves a different purpose. It compares the current policy with the behaviour policy $\pi_{\mathrm{old}}$ that generated the current rollout batch. Because $\pi_{\mathrm{old}}$ is refreshed after every rollout, the clip only limits the size of **individual policy updates**.
+> The PPO clipping mechanism still remains active, but it serves a different purpose. It compares the current policy with the behaviour policy $\pi_{\mathrm{old}}$ that generated the current rollout batch. Because $\pi_{\mathrm{old}}$ is refreshed after every rollout, the clip only moderates optimisation on the **current batch**; it does not enforce a hard limit on the update.
 >
 > This means the policy can take a long sequence of small, clipped updates and gradually move arbitrarily far from the original supervised model. Although every step is locally conservative, the total journey is unconstrained. PPO clipping therefore provides **local stability**, but it does not provide **global anchoring**.
 >
 > As the policy drifts into regions that differ substantially from the distribution on which the reward model was trained, the reward model becomes increasingly unreliable. The policy can begin exploiting systematic errors in the reward model, producing responses that receive high predicted reward without actually being more helpful or preferred by humans. This phenomenon is known as **reward hacking**.
 >
-> In practice, such behavioural drift often manifests as excessive verbosity, sycophancy, repetitive phrasing, overconfident but incorrect answers, unnatural response styles, or other behaviours that maximize the learned reward signal while deviating from genuine human preferences. The reference KL penalty exists precisely to prevent this gradual accumulation of drift over many PPO iterations.
+> In practice, such behavioural drift may manifest as excessive verbosity, sycophancy, repetitive phrasing, overconfident but incorrect answers, unnatural response styles, or other behaviours that maximize the learned reward signal while deviating from genuine human preferences. Reference KL regularisation is used to discourage this gradual accumulation of drift over many PPO iterations.
 
 ### Question 15 — Which KL does early stopping monitor?
 
-Suppose training is halted when KL divergence from the reference exceeds a threshold. Which of the two KL mechanisms does this correspond to, and why is it a global-budget tool?
+Suppose training is halted when KL divergence from the frozen reference exceeds a threshold. Which policy comparison does this monitor, and why is it a global-budget tool?
 
 > [!success]- Answer
 >
@@ -1598,9 +1605,9 @@ Suppose training is halted when KL divergence from the reference exceeds a thres
 > \right).
 > $$
 >
-> This KL divergence belongs to the **global anchoring (or reference leash)** mechanism, **not** the PPO clipping mechanism. The reference policy $\pi_{\mathrm{ref}}$ is frozen throughout the entire RLHF training process, so this quantity measures the **cumulative drift** of the learned policy from its supervised starting point.
+> This KL divergence monitors **reference-policy regularisation**, **not** PPO clipping. The reference policy $\pi_{\mathrm{ref}}$ is frozen throughout the RLHF training process, so this quantity measures the **cumulative drift** of the learned policy from its supervised starting point.
 >
-> In contrast, PPO's clipping mechanism is based on comparisons with the **behaviour policy** $\pi_{\mathrm{old}}$, which generated the current rollout batch. Since $\pi_{\mathrm{old}}$ is refreshed after every rollout, it measures only the size of the **next optimization step**, not the overall distance travelled.
+> In contrast, PPO's clipping mechanism is based on sampled-action ratios relative to the **behaviour policy** $\pi_{\mathrm{old}}$, which generated the current rollout batch. Since $\pi_{\mathrm{old}}$ is refreshed after every rollout, clipping acts only on optimisation of that batch, not on the overall distance travelled.
 >
 > Early stopping based on
 >
@@ -1613,7 +1620,7 @@ Suppose training is halted when KL divergence from the reference exceeds a thres
 > \right)
 > $$
 >
-> therefore asks whether the policy has consumed too much of its **global drift budget**. It does not matter that each individual PPO update was conservative; many small updates can still accumulate into a large deviation from the supervised model. In this sense, the reference KL limits the **destination** of the optimization, whereas PPO clipping limits the **size of each step** taken along the way.
+> therefore asks whether the policy has consumed too much of its **global drift budget**. Even if individual PPO updates are conservative, many updates can accumulate into a large deviation from the supervised model. In this sense, the reference KL monitors and discourages movement away from the **anchor**, whereas PPO clipping moderates optimisation on each **current batch**. Neither is a hard limit.
 
 ### Question 16 — Can increasing the PPO clip range reduce reward hacking?
 
@@ -1628,4 +1635,4 @@ True or false: increasing the clip range $\epsilon$ is a valid way to reduce rew
 > - **Close to what?** The PPO clipping mechanism compares the current policy $\pi_\theta$ with the behaviour policy $\pi_{\mathrm{old}}$ that generated the rollout, **not** with the frozen SFT reference model.
 > - **For how long?** This comparison is valid only for the current rollout batch. Once a new batch is collected, $\pi_{\mathrm{old}}$ is refreshed and becomes the new behaviour policy.
 >
-> Reward hacking is fundamentally a **cumulative policy-drift** problem. It is controlled by the **reference KL penalty** (through the coefficient $\beta$), KL-budget monitoring, early stopping, stronger reward models, and periodic human evaluation. Increasing the PPO clipping range merely allows larger policy updates within each batch, making the optimization less conservative. It does not prevent the policy from drifting toward regions where the reward model can be exploited and may therefore increase, rather than reduce, the risk of reward hacking.
+> Reward hacking arises from optimising an imperfect proxy and can be exacerbated by **cumulative policy drift**. It can be mitigated—not eliminated—by the **reference KL penalty** (through the coefficient $\beta$), KL-budget monitoring, early stopping, stronger reward models, and periodic human evaluation. Increasing the PPO clipping range makes optimisation less conservative within each batch. It does not stop cumulative drift toward regions where the reward model can be exploited and may therefore increase, rather than reduce, the risk of reward hacking.

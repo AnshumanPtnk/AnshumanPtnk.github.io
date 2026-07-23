@@ -1,11 +1,6 @@
 ---
 title: "Group Relative Policy Optimization: Training Reasoning Models Without a Critic"
-description: "A dense, first-principles guide to GRPO, RLVR, group-relative advantages, PPO-style clipping, verifier design, DAPO, Dr. GRPO, and production trade-offs."
-author: Anshuman Patnaik
-pubDatetime: 2026-07-15T10:00:00+05:30
-category: "Reinforcement Learning"
-draft: false
-readingTime: "24 min read"
+description: A dense, first-principles guide to GRPO, RLVR, group-relative advantages, PPO-style clipping, verifier design, DAPO, Dr. GRPO, and production trade-offs.
 tags:
   - reinforcement-learning
   - grpo
@@ -17,14 +12,21 @@ tags:
 aliases:
   - GRPO
   - Group Relative Policy Optimization
+author: Anshuman Patnaik
+category: "Reinforcement Learning"
+readingTime: "29 min read"
+draft: false
+pubDatetime: 2026-07-23
 ---
 
 # Group Relative Policy Optimization: Training Reasoning Models Without a Critic
 
 > [!abstract]
-> **Mission statement.** This note explains why modern reasoning-model training could remove two expensive learned components from the classical RLHF stack: the reward model and the critic. The reward model can disappear when correctness is directly verifiable, and the critic can disappear when a group of sampled responses provides a prompt-specific baseline. GRPO is therefore not a new policy-gradient law. It is a careful reorganisation of where the reward and the baseline come from.
+> **The Elevator Pitch**
+>
+> This note explains why modern reasoning-model training could remove two expensive learned components from the classical RLHF stack: the reward model and the critic. The reward model can disappear when correctness is directly verifiable, and the critic can disappear when a group of sampled responses provides a prompt-specific baseline. GRPO is therefore not a new policy-gradient law. It is a careful reorganisation of where the reward and the baseline come from.
 
-![GRPO end-to-end pipeline](../../../assets/images/grpo-end-to-end.svg)
+![GRPO end-to-end training pipeline](../../../assets/images/grpo-end-to-end.svg)
 
 ## Contents
 
@@ -182,7 +184,7 @@ $$
 
 The small coefficient matters. Formatting should help the parser and encourage consistent structure, but it should never outweigh correctness.
 
-![RLHF versus RLVR](../../../assets/images/rlhf-vs-rlvr.svg)
+![Comparison of RLHF and reinforcement learning with verifiable rewards](../../../assets/images/rlhf-vs-rlvr.svg)
 
 ---
 
@@ -273,7 +275,7 @@ $$
 
 The target is the same. The method of obtaining it differs.
 
-![Critic versus group baseline](../../../assets/images/critic-vs-group-baseline.svg)
+![Learned critic compared with a group-relative baseline](../../../assets/images/critic-vs-group-baseline.svg)
 
 ---
 
@@ -374,7 +376,7 @@ $$
 
 The standardisation changes scale but not sign. Dr. GRPO later argues that this rescaling introduces a prompt-difficulty bias and should be removed.
 
-![Group-relative advantage computation](../../../assets/images/group-relative-advantage.svg)
+![Group-relative advantage computation in GRPO](../../../assets/images/group-relative-advantage.svg)
 
 ---
 
@@ -524,7 +526,7 @@ $$
 
 Libraries often minimise the negative of this expression.
 
-![GRPO objective flow](../../../assets/images/grpo-objective-flow.svg)
+![Flow of terms through the GRPO objective](../../../assets/images/grpo-objective-flow.svg)
 
 > [!info]
 > There is no critic loss because there is no critic. There is no GAE because there are no learned per-token value estimates. The actor update remains a PPO-style clipped policy-gradient objective.
@@ -709,7 +711,7 @@ GRPO does not estimate $V(s_t)$. Every token in a response inherits the same res
 
 That simplification is well matched to tasks with terminal, verifiable rewards. It is less attractive when the environment provides meaningful dense feedback at every step.
 
-![PPO versus GRPO](../../../assets/images/ppo-vs-grpo.svg)
+![Comparison of PPO and GRPO training components](../../../assets/images/ppo-vs-grpo.svg)
 
 ---
 
@@ -767,7 +769,7 @@ The prompt contributes no policy gradient.
 
 This happens for all-correct groups and all-wrong groups. The first may indicate that the prompt is already solved. The second may indicate that the prompt is too difficult for the current policy. In either case, the rollout budget produces no immediate learning signal.
 
-![Dead groups produce zero advantage](../../../assets/images/dead-groups.svg)
+![Dead groups with identical rewards produce zero advantage](../../../assets/images/dead-groups.svg)
 
 ### Entropy collapse
 
@@ -858,7 +860,7 @@ Each token receives equal weight regardless of the response length from which it
 
 DAPO applies a soft penalty to responses that approach or exceed an undesirable length threshold. A soft penalty avoids the discontinuity of a hard cutoff while discouraging uncontrolled growth and reducing noisy truncation effects.
 
-![DAPO modifications to GRPO](../../../assets/images/dapo-modifications.svg)
+![DAPO modifications to the GRPO objective](../../../assets/images/dapo-modifications.svg)
 
 ---
 
@@ -1077,7 +1079,7 @@ Use PPO when:
 - per-step credit assignment is valuable;
 - a learned value function can substantially reduce variance.
 
-![PPO or GRPO decision rule](../../../assets/images/ppo-or-grpo-decision.svg)
+![Decision guide for choosing PPO or GRPO](../../../assets/images/ppo-or-grpo-decision.svg)
 
 A useful decision rule is:
 

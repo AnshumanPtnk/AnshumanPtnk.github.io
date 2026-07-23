@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="dpoArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#64748b"/>
+    </marker>
+    <marker id="dpoGreenArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#16a34a"/>
+    </marker>
+    <marker id="dpoRedArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#dc2626"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="760" fill="#fafaf9"/>
+  <text x="600" y="40" text-anchor="middle" font-size="23" font-weight="700" fill="#1e293b">The DPO Gradient — Margin, Difficulty Weight, Update</text>
+  <text x="600" y="65" text-anchor="middle" font-size="13" fill="#64748b">One preference pair; πref is frozen and β = 0.1</text>
+
+  <!-- Step 1 -->
+  <rect x="45" y="100" width="320" height="138" rx="15" fill="#ffffff" stroke="#3b82f6" stroke-width="2"/>
+  <rect x="45" y="100" width="320" height="42" rx="15" fill="#dbeafe"/>
+  <path d="M45 126 L45 142 L365 142 L365 126" fill="#dbeafe"/>
+  <text x="205" y="128" text-anchor="middle" font-size="14" font-weight="700" fill="#1e40af">1 · Relative log-probabilities</text>
+  <text x="205" y="170" text-anchor="middle" font-size="13" fill="#1e293b">Δw = log πθ(yw|x) − log πref(yw|x) = +0.80</text>
+  <text x="205" y="198" text-anchor="middle" font-size="13" fill="#1e293b">Δl = log πθ(yl|x) − log πref(yl|x) = −0.40</text>
+  <text x="205" y="222" text-anchor="middle" font-size="10.5" fill="#64748b">The reference affects these scores, but receives no gradient.</text>
+
+  <line x1="365" y1="169" x2="410" y2="169" stroke="#64748b" stroke-width="2.5" marker-end="url(#dpoArrow)"/>
+
+  <!-- Step 2 -->
+  <rect x="420" y="100" width="300" height="138" rx="15" fill="#ffffff" stroke="#d97706" stroke-width="2"/>
+  <rect x="420" y="100" width="300" height="42" rx="15" fill="#fef3c7"/>
+  <path d="M420 126 L420 142 L720 142 L720 126" fill="#fef3c7"/>
+  <text x="570" y="128" text-anchor="middle" font-size="14" font-weight="700" fill="#92400e">2 · Preference margin</text>
+  <text x="570" y="178" text-anchor="middle" font-size="18" font-weight="700" fill="#78350f">m = β(Δw − Δl)</text>
+  <text x="570" y="208" text-anchor="middle" font-size="15" fill="#92400e">= 0.1 × (0.80 − (−0.40)) = +0.12</text>
+  <text x="570" y="226" text-anchor="middle" font-size="10.5" fill="#64748b">Positive, but only barely above the decision boundary.</text>
+
+  <line x1="720" y1="169" x2="765" y2="169" stroke="#64748b" stroke-width="2.5" marker-end="url(#dpoArrow)"/>
+
+  <!-- Step 3 -->
+  <rect x="775" y="100" width="380" height="138" rx="15" fill="#ffffff" stroke="#7c3aed" stroke-width="2"/>
+  <rect x="775" y="100" width="380" height="42" rx="15" fill="#ede9fe"/>
+  <path d="M775 126 L775 142 L1155 142 L1155 126" fill="#ede9fe"/>
+  <text x="965" y="128" text-anchor="middle" font-size="14" font-weight="700" fill="#6d28d9">3 · Dynamic difficulty weight</text>
+  <text x="965" y="177" text-anchor="middle" font-size="19" font-weight="700" fill="#4c1d95">d = σ(−m) = σ(−0.12) = 0.470</text>
+  <text x="965" y="205" text-anchor="middle" font-size="12" fill="#6d28d9">At a tie, d = 0.5. So 0.470 is not “nearly closed.”</text>
+  <text x="965" y="226" text-anchor="middle" font-size="10.5" fill="#64748b">The total scalar multiplying the score gradients is βd = 0.047.</text>
+
+  <!-- Gradient descent direction -->
+  <line x1="600" y1="238" x2="600" y2="278" stroke="#64748b" stroke-width="2.5" marker-end="url(#dpoArrow)"/>
+  <rect x="150" y="288" width="900" height="92" rx="15" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="600" y="315" text-anchor="middle" font-size="13" font-weight="700" fill="#334155">One-pair gradient-descent direction</text>
+  <text x="600" y="348" text-anchor="middle" font-size="19" font-weight="700" fill="#1e293b">−∇θL = βd [ ∇θ log πθ(yw|x) − ∇θ log πθ(yl|x) ]</text>
+  <text x="600" y="369" text-anchor="middle" font-size="10.5" fill="#64748b">The frozen reference shapes m and d; ∇θ log πref = 0.</text>
+
+  <!-- Directional contributions -->
+  <line x1="455" y1="380" x2="315" y2="420" stroke="#16a34a" stroke-width="2.5" marker-end="url(#dpoGreenArrow)"/>
+  <line x1="745" y1="380" x2="885" y2="420" stroke="#dc2626" stroke-width="2.5" marker-end="url(#dpoRedArrow)"/>
+
+  <rect x="105" y="420" width="350" height="72" rx="13" fill="#dcfce7" stroke="#16a34a"/>
+  <text x="280" y="448" text-anchor="middle" font-size="13" font-weight="700" fill="#166534">+ ∇θ log πθ(yw|x)</text>
+  <text x="280" y="471" text-anchor="middle" font-size="11" fill="#14532d">favours the chosen response in the relative gap</text>
+
+  <rect x="745" y="420" width="350" height="72" rx="13" fill="#fee2e2" stroke="#dc2626"/>
+  <text x="920" y="448" text-anchor="middle" font-size="13" font-weight="700" fill="#991b1b">− ∇θ log πθ(yl|x)</text>
+  <text x="920" y="471" text-anchor="middle" font-size="11" fill="#7f1d1d">disfavours the rejected response in the relative gap</text>
+
+  <!-- Weight curve -->
+  <rect x="45" y="525" width="720" height="200" rx="15" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="405" y="552" text-anchor="middle" font-size="14" font-weight="700" fill="#334155">Difficulty weight d = σ(−m)</text>
+  <line x1="100" y1="685" x2="720" y2="685" stroke="#64748b" stroke-width="1.6" marker-end="url(#dpoArrow)"/>
+  <line x1="105" y1="700" x2="105" y2="575" stroke="#64748b" stroke-width="1.6" marker-end="url(#dpoArrow)"/>
+  <text x="710" y="710" text-anchor="end" font-size="10.5" fill="#475569">margin m</text>
+  <text x="120" y="585" font-size="10.5" fill="#475569">weight d</text>
+  <line x1="405" y1="575" x2="405" y2="690" stroke="#cbd5e1" stroke-width="1.2" stroke-dasharray="4 4"/>
+  <line x1="105" y1="630" x2="720" y2="630" stroke="#cbd5e1" stroke-width="1.2" stroke-dasharray="4 4"/>
+  <path d="M115 584 C250 584 330 595 380 615 C397 622 405 627 415 633 C465 663 545 676 710 677" fill="none" stroke="#7c3aed" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="414" cy="633" r="7" fill="#d97706" stroke="#ffffff" stroke-width="2"/>
+  <text x="430" y="616" font-size="10.5" font-weight="700" fill="#92400e">m=.12, d=.470</text>
+  <text x="125" y="605" font-size="10.5" fill="#6d28d9">mis-ranked → d≈1</text>
+  <text x="390" y="710" text-anchor="middle" font-size="10" fill="#64748b">0</text>
+  <text x="680" y="665" text-anchor="end" font-size="10.5" fill="#6d28d9">confidently correct → d≈0</text>
+
+  <!-- Interpretation -->
+  <rect x="795" y="525" width="360" height="200" rx="15" fill="#ffffff" stroke="#d97706"/>
+  <text x="975" y="552" text-anchor="middle" font-size="14" font-weight="700" fill="#92400e">Correct interpretation</text>
+  <text x="825" y="586" font-size="11.5" font-weight="700" fill="#991b1b">m &lt; 0</text>
+  <text x="900" y="586" font-size="11.5" fill="#475569">mis-ranked pair; d &gt; 0.5</text>
+  <text x="825" y="616" font-size="11.5" font-weight="700" fill="#334155">m = 0</text>
+  <text x="900" y="616" font-size="11.5" fill="#475569">tie; d = 0.5</text>
+  <text x="825" y="646" font-size="11.5" font-weight="700" fill="#166534">m ≫ 0</text>
+  <text x="900" y="646" font-size="11.5" fill="#475569">confidently correct; d → 0</text>
+  <rect x="825" y="670" width="300" height="38" rx="10" fill="#fef3c7"/>
+  <text x="975" y="694" text-anchor="middle" font-size="10.5" fill="#78350f">DPO increases the relative chosen–rejected gap.</text>
+
+  <text x="600" y="748" text-anchor="middle" font-size="10.5" fill="#64748b">Because both responses share parameters, the formula gives a local contrastive direction—not a guarantee that both raw likelihoods move independently.</text>
+</svg>

@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="utilityArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#64748b"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="720" fill="#fafaf9"/>
+  <text x="600" y="42" text-anchor="middle" font-size="23" font-weight="700" fill="#1e293b">KTO — Gain and Loss Utilities Around z₀</text>
+  <text x="600" y="67" text-anchor="middle" font-size="13" fill="#64748b">The strongest gradients occur close to the KL-derived reference point</text>
+
+  <rect x="70" y="100" width="1060" height="500" rx="16" fill="#ffffff" stroke="#cbd5e1"/>
+  <rect x="95" y="125" width="505" height="420" fill="#fef2f2" opacity="0.65"/>
+  <rect x="600" y="125" width="505" height="420" fill="#f0fdf4" opacity="0.65"/>
+  <text x="335" y="153" text-anchor="middle" font-size="13" font-weight="700" fill="#991b1b">rθ − z₀ &lt; 0 · loss side</text>
+  <text x="865" y="153" text-anchor="middle" font-size="13" font-weight="700" fill="#166534">rθ − z₀ &gt; 0 · gain side</text>
+
+  <line x1="110" y1="500" x2="1090" y2="500" stroke="#64748b" stroke-width="1.8" marker-end="url(#utilityArrow)"/>
+  <line x1="600" y1="550" x2="600" y2="135" stroke="#64748b" stroke-width="1.8" marker-end="url(#utilityArrow)"/>
+  <text x="1080" y="529" text-anchor="end" font-size="12" fill="#475569">Δ = rθ(x,y) − z₀</text>
+  <text x="627" y="151" font-size="12" fill="#475569">KTO value</text>
+
+  <line x1="600" y1="125" x2="600" y2="550" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="5 5"/>
+  <line x1="110" y1="320" x2="1090" y2="320" stroke="#cbd5e1" stroke-width="1.2" stroke-dasharray="4 4"/>
+  <circle cx="600" cy="320" r="6" fill="#1e293b"/>
+  <text x="615" y="306" font-size="10.5" fill="#475569">Δ = 0, sigmoid = 0.5</text>
+
+  <path d="M115 480 C350 480 480 455 545 380 C570 350 585 333 600 320 C615 307 630 290 655 260 C720 185 850 160 1085 160" fill="none" stroke="#16a34a" stroke-width="5" stroke-linecap="round"/>
+  <path d="M115 160 C350 160 480 185 545 260 C570 290 585 307 600 320 C615 333 630 350 655 380 C720 455 850 480 1085 480" fill="none" stroke="#dc2626" stroke-width="5" stroke-linecap="round"/>
+
+  <rect x="765" y="180" width="292" height="68" rx="11" fill="#dcfce7" stroke="#86efac"/>
+  <text x="911" y="205" text-anchor="middle" font-size="12.5" font-weight="700" fill="#166534">desirable utility</text>
+  <text x="911" y="228" text-anchor="middle" font-size="12" fill="#14532d">vD = λD · σ(βΔ)</text>
+
+  <rect x="143" y="180" width="292" height="68" rx="11" fill="#fee2e2" stroke="#fca5a5"/>
+  <text x="289" y="205" text-anchor="middle" font-size="12.5" font-weight="700" fill="#991b1b">undesirable utility</text>
+  <text x="289" y="228" text-anchor="middle" font-size="12" fill="#7f1d1d">vU = λU · σ(−βΔ)</text>
+
+  <line x1="510" y1="535" x2="690" y2="535" stroke="#d97706" stroke-width="5" stroke-linecap="round"/>
+  <line x1="510" y1="528" x2="510" y2="542" stroke="#d97706" stroke-width="2"/>
+  <line x1="690" y1="528" x2="690" y2="542" stroke="#d97706" stroke-width="2"/>
+  <text x="600" y="565" text-anchor="middle" font-size="11" font-weight="700" fill="#92400e">high-sensitivity region</text>
+
+  <rect x="110" y="615" width="470" height="72" rx="12" fill="#f1f5f9" stroke="#cbd5e1"/>
+  <text x="345" y="640" text-anchor="middle" font-size="12" font-weight="700" fill="#334155">β controls the shape</text>
+  <text x="345" y="663" text-anchor="middle" font-size="11" fill="#64748b">larger β → steeper boundary and faster saturation</text>
+
+  <rect x="620" y="615" width="470" height="72" rx="12" fill="#f1f5f9" stroke="#cbd5e1"/>
+  <text x="855" y="640" text-anchor="middle" font-size="12" font-weight="700" fill="#334155">λD and λU control asymmetry</text>
+  <text x="855" y="663" text-anchor="middle" font-size="11" fill="#64748b">weights encode importance and correct label imbalance</text>
+</svg>

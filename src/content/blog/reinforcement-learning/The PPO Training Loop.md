@@ -2,56 +2,43 @@
 title: The PPO Training Loop
 subtitle: How experience becomes a better policy
 description: A dense, end-to-end explanation of how Proximal Policy Optimization collects experience, computes advantages, reuses a batch safely, and updates the actor and critic.
-author: Anshuman Patnaik
-pubDatetime: 2026-07-13T09:15:00+05:30
-category: "Reinforcement Learning"
-draft: false
-readingTime: "27 min read"
 tags:
   - Reinforcement Learning
   - PPO
   - Policy Gradient
   - Actor Critic
   - RLHF
+author: Anshuman Patnaik
+created: 2026-07-13
+category: "Reinforcement Learning"
+readingTime: "27 min read"
+draft: false
+pubDatetime: 2026-07-10
 ---
 
 # The PPO Training Loop
 
 > [!abstract]
-> **Mission Statement**
+> **The Elevator Pitch**
 >
 > PPO is often introduced through one equation—the clipped surrogate objective—but the equation makes sense only when placed inside the complete training loop. This note follows one full PPO iteration from data collection to policy improvement and shows how returns, the critic, the advantage, importance sampling, clipping, minibatch optimization, and fresh rollouts fit together as parts of one coherent algorithm.
 
 # Contents
 
 [[#1. PPO Is a Training Loop, Not Just a Loss Function]]
-
 [[#2. The Entire Loop at a Glance]]
-
 [[#3. Why PPO Needs Clipping]]
-
 [[#4. Stage One: Collect Experience]]
-
 [[#5. What the Rollout Buffer Must Preserve]]
-
 [[#6. Stage Two: Convert Experience into Learning Targets]]
-
 [[#7. Stage Three: Reuse the Batch for Several Epochs]]
-
 [[#8. The Clipped Surrogate Objective]]
-
 [[#9. Actor, Critic, and Entropy Terms]]
-
 [[#10. Stage Four: Discard the Batch and Repeat]]
-
 [[#11. One Transition Moving Through PPO]]
-
 [[#12. PPO as an Algorithm]]
-
 [[#13. Why the Loop Is Sample Efficient]]
-
 [[#14. Failure Modes and Diagnostics]]
-
 [[#15. Summary]]
 
 ---
@@ -105,7 +92,7 @@ That rhythm is more important than any individual line of the objective.
 
 The complete PPO loop can be represented as a cycle in which each stage produces the inputs required by the next.
 
-![PPO training loop](../../../assets/images/ppo-training-loop-overview.svg)
+![PPO training loop|697](../../../assets/images/ppo-training-loop-overview.svg)
 
 The loop begins with a current policy, which is temporarily treated as the behaviour policy $\pi_{\mathrm{old}}$. This policy interacts with the environment and fills a rollout buffer containing states, actions, rewards, termination signals, value predictions, and the old log-probabilities of the sampled actions. The collected rewards are then converted into return targets, while the critic supplies a baseline used to compute advantages. Those advantages are normalized and held fixed while the policy and critic are optimized over shuffled minibatches for several epochs.
 
@@ -266,7 +253,7 @@ $$
 
 A positive advantage means that the sampled action led to an outcome better than the critic expected from the state. A negative advantage means that the outcome was worse than expected. The advantage is therefore the actor's directional learning signal: increase the probability of actions with positive advantages and decrease the probability of actions with negative advantages.
 
-![From rollout to learning targets](../../../assets/images/ppo-rollout-to-targets.svg)
+![From rollout to learning targets|697](../../../assets/images/ppo-rollout-to-targets.svg)
 
 In many practical PPO implementations, the advantage is computed with Generalized Advantage Estimation rather than a full Monte Carlo return. GAE mixes one-step temporal-difference errors across several horizons,
 
@@ -326,7 +313,7 @@ After the first few updates, $\pi_\theta$ begins to drift away from $\pi_{\mathr
 
 For every minibatch, PPO performs the following conceptual operations:
 
-![PPO_minibatch](../../../assets/images/ppo_minibatches.png)
+![PPO_minibatch|697](../../../assets/images/ppo_minibatches.png)
 
 
 The policy ratio is usually computed in log space for numerical stability:
@@ -383,7 +370,7 @@ This pessimistic choice ensures that the objective does not reward policy moveme
 
 The same batch is then shuffled and processed again. Some transitions may remain inside the clipping band and continue teaching the policy. Others may already have moved beyond their safe boundary and become effectively silent. This selective flattening is what allows PPO to squeeze several updates out of one batch without allowing every stale sample to keep exerting full pressure indefinitely.
 
-![PPO batch reuse across epochs](../../../assets/images/ppo-batch-reuse.svg)
+![PPO batch reuse across epochs|697](../../../assets/images/ppo-batch-reuse.svg)
 
 Batch reuse should not be confused with unrestricted replay. PPO is still fundamentally on-policy. The batch is reused only for a small, finite number of epochs, and the updates are measured relative to the frozen behaviour policy that produced that batch. Once the policy has moved enough that the batch is broadly stale, PPO discards it and returns to the environment.
 
@@ -413,7 +400,7 @@ L_t^{\mathrm{CLIP}}
 (1-\epsilon)\hat{A}_t.
 $$
 
-![PPO Clipped Surrogate Objective](../../../assets/images/ppo-clipped-surrogate-objective.png)
+![PPO Clipped Surrogate Objective|697](../../../assets/images/ppo-clipped-surrogate-objective.png)
 
 Again, the gradient becomes zero when the clipped branch controls the minimum. PPO therefore limits both over-promotion of good actions and over-suppression of bad actions, but it does so asymmetrically according to the sign of the advantage.
 
@@ -475,7 +462,7 @@ The clipped actor term improves the policy cautiously. It uses the fixed advanta
 
 The three terms should not be interpreted as unrelated losses that merely happen to be added together. They form a feedback system. The actor changes the policy, the changed policy produces a new return distribution, the critic tracks that distribution, and the improved critic sharpens the next set of advantages. Entropy moderates the actor during this process by preserving enough stochasticity for the agent to continue exploring alternatives.
 
-![Actor, critic, and entropy terms](../../../assets/images/ppo-objective-components.svg)
+![Actor, critic, and entropy terms|697](../../../assets/images/ppo-objective-components.svg)
 
 The critic loss is commonly written as
 
@@ -518,7 +505,7 @@ This step is what preserves the on-policy character of PPO. The method permits l
 
 The end of one PPO iteration can therefore be summarized as
 
-![PPO Iteration](../../../assets/images/ppo_iteration.png)
+![PPO Iteration|697](../../../assets/images/ppo_iteration.png)
 
 The old policy is not usually maintained as a permanently separate network throughout standard PPO training. The frozen reference for a batch is represented by the stored old log-probabilities. At the next collection stage, the current policy simply generates fresh trajectories, and its action log-probabilities become the next batch's frozen reference values.
 

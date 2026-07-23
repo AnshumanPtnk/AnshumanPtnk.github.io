@@ -1,58 +1,42 @@
 ---
 title: Surrogate Objective, KL Divergence and Trust Region Optimization
 description: Learning Note 06 — Understanding why modern policy optimization algorithms optimize a surrogate objective instead of the true reinforcement learning objective.
-author: Anshuman Patnaik
-pubDatetime: 2026-07-12T12:30:00+05:30
-category: "Reinforcement Learning"
-draft: false
-readingTime: "17 min read"
 tags:
   - Reinforcement Learning
   - Policy Gradient
   - TRPO
   - PPO
   - Importance Sampling
+author: Anshuman Patnaik
+created: 2026-07-13
+pubDatetime: 2026-07-12T12:30:00+05:30
+category: "Reinforcement Learning"
+readingTime: "18 min read"
+draft: false
+last_updated: 2026-07-04
 ---
 
 # Surrogate Objective, KL Divergence and Trust Region Optimization
 
 > [!abstract]
-> **Learning Objectives**
+> **The Elevator Pitch**
 >
-> After completing this note, you should be able to:
->
-> - Understand why policy optimization cannot directly optimize the true reinforcement learning objective.
-> - Derive the surrogate objective using Importance Sampling.
-> - Explain why the surrogate objective is only locally accurate.
-> - Understand KL divergence as a measure of policy similarity.
-> - Explain why TRPO introduces a trust region.
-> - Understand how these ideas naturally motivate PPO.
+> Policy optimisation has a moving-data problem: as soon as the policy changes, the distribution of trajectories changes with it. Importance Sampling lets us reuse experience from the old policy, but the resulting surrogate objective is trustworthy only while the new policy remains nearby. This note follows that idea from probability ratios to KL divergence and trust regions, showing how TRPO formalises cautious updates and how the same motivation leads naturally to PPO.
 
 ---
 # Contents
 
 [[#1. Introduction]]
-
 [[#2. The Data Distribution Problem]]
-
 [[#3. The Cost of Fresh Data]]
-
 [[#4. Reusing Experience Through Importance Sampling]]
-
 [[#5. Why the Surrogate Objective Is Only a Local Approximation]]
-
 [[#6. Measuring Policy Difference with KL Divergence]]
-
 [[#7. Kullback-Leibler (KL) Divergence]]
-
 [[#8. Trust Region Optimization]]
-
 [[#9. Trust Region Policy Optimization (TRPO)]]
-
 [[#10. From TRPO to PPO]]
-
 [[#Summary]]
-
 ---
 # 1. Introduction
 

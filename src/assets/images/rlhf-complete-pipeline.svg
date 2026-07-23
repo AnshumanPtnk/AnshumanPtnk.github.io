@@ -1,1 +1,44 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900" role="img"><style>.bg{fill:#faf9f6}.box{fill:#fff;stroke:#26344d;stroke-width:2.5}.blue{fill:#edf3ff;stroke:#3b64b0;stroke-width:2.8}.green{fill:#eef8f1;stroke:#2f7b4d;stroke-width:2.8}.orange{fill:#fff4e8;stroke:#aa6721;stroke-width:2.8}.purple{fill:#f5efff;stroke:#7044aa;stroke-width:2.8}.red{fill:#fbeeee;stroke:#a94747;stroke-width:2.8}.title{font:700 34px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#172033}.label{font:700 24px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#172033}.body{font:500 18px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#354056}.small{font:500 16px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#4f596c}.arrow{fill:none;stroke:#52617a;stroke-width:4;marker-end:url(#a)}.axis{stroke:#25324a;stroke-width:2.5}.grid{stroke:#d5dae2;stroke-width:1.4;stroke-dasharray:5 6}</style><defs><marker id="a" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0,0 L12,6 L0,12 z" fill="#52617a"/></marker></defs><rect class="bg" width="1400" height="900"/><text class="title" x="700.0" y="55" text-anchor="middle">RLHF: From Human Preference to Policy Update</text><rect class="blue" x="70" y="150" width="260" height="140" rx="20"/><text class="label" x="200" y="200" text-anchor="middle">SFT Model</text><text class="body" x="200" y="240" text-anchor="middle">fluent starting policy</text><path class="arrow" d="M330 220 L430 220"/><rect class="green" x="430" y="125" width="320" height="190" rx="20"/><text class="label" x="590" y="170" text-anchor="middle">Preference Data</text><text class="body" x="590" y="210" text-anchor="middle">prompt · winner · loser</text><text class="body" x="590" y="245" text-anchor="middle">Bradley–Terry loss</text><text class="body" x="590" y="280" text-anchor="middle">train scalar judge</text><path class="arrow" d="M750 220 L850 220"/><rect class="purple" x="850" y="150" width="300" height="140" rx="20"/><text class="label" x="1000" y="200" text-anchor="middle">Frozen Reward Model</text><text class="body" x="1000" y="240" text-anchor="middle">scores complete responses</text><path class="arrow" d="M1000 290 L1000 405"/><rect class="orange" x="820" y="405" width="360" height="150" rx="20"/><text class="label" x="1000" y="452" text-anchor="middle">Token Rewards</text><text class="body" x="1000" y="490" text-anchor="middle">terminal reward-model score</text><text class="body" x="1000" y="520" text-anchor="middle">+ per-token KL toll</text><path class="arrow" d="M820 480 L700 480"/><rect class="box" x="410" y="405" width="290" height="150" rx="20"/><text class="label" x="555" y="452" text-anchor="middle">Returns &amp; Advantages</text><text class="body" x="555" y="490" text-anchor="middle">Gₜ propagated backward</text><text class="body" x="555" y="520" text-anchor="middle">Aₜ = Gₜ − V(sₜ)</text><path class="arrow" d="M410 480 L300 480"/><rect class="red" x="60" y="405" width="240" height="150" rx="20"/><text class="label" x="180" y="452" text-anchor="middle">PPO Update</text><text class="body" x="180" y="490" text-anchor="middle">clip local ratios</text><text class="body" x="180" y="520" text-anchor="middle">update actor &amp; critic</text><path class="arrow" d="M180 555 C180 700 650 720 650 620"/><rect class="blue" x="480" y="620" width="340" height="150" rx="20"/><text class="label" x="650" y="668" text-anchor="middle">Improved Policy</text><text class="body" x="650" y="706" text-anchor="middle">anchored to frozen SFT reference</text><text class="body" x="650" y="738" text-anchor="middle">collects the next rollout batch</text></svg>
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900" role="img">
+  <style>.bg{fill:#faf9f6}.box{fill:#fff;stroke:#26344d;stroke-width:2.5}.blue{fill:#edf3ff;stroke:#3b64b0;stroke-width:2.8}.green{fill:#eef8f1;stroke:#2f7b4d;stroke-width:2.8}.orange{fill:#fff4e8;stroke:#aa6721;stroke-width:2.8}.purple{fill:#f5efff;stroke:#7044aa;stroke-width:2.8}.red{fill:#fbeeee;stroke:#a94747;stroke-width:2.8}.title{font:700 34px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#172033}.label{font:700 24px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#172033}.body{font:500 18px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#354056}.small{font:500 16px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#4f596c}.arrow{fill:none;stroke:#52617a;stroke-width:4;marker-end:url(#a)}.axis{stroke:#25324a;stroke-width:2.5}.grid{stroke:#d5dae2;stroke-width:1.4;stroke-dasharray:5 6}</style>
+  <defs>
+    <marker id="a" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0,0 L12,6 L0,12 z" fill="#52617a"/>
+    </marker>
+  </defs>
+  <rect class="bg" width="1400" height="900"/>
+  <text class="title" x="700.0" y="55" text-anchor="middle">RLHF: From Human Preference to Policy Update</text>
+  <rect class="blue" x="70" y="150" width="260" height="140" rx="20"/>
+  <text class="label" x="200" y="200" text-anchor="middle">SFT Model</text>
+  <text class="body" x="200" y="240" text-anchor="middle">fluent starting policy</text>
+  <path class="arrow" d="M330 220 L430 220"/>
+  <rect class="green" x="430" y="125" width="320" height="190" rx="20"/>
+  <text class="label" x="590" y="170" text-anchor="middle">Preference Data</text>
+  <text class="body" x="590" y="210" text-anchor="middle">prompt &#xB7; winner &#xB7; loser</text>
+  <text class="body" x="590" y="245" text-anchor="middle">Bradley&#x2013;Terry loss</text>
+  <text class="body" x="590" y="280" text-anchor="middle">train scalar judge</text>
+  <path class="arrow" d="M750 220 L850 220"/>
+  <rect class="purple" x="850" y="150" width="300" height="140" rx="20"/>
+  <text class="label" x="1000" y="200" text-anchor="middle">Frozen Reward Model</text>
+  <text class="body" x="1000" y="240" text-anchor="middle">scores complete responses</text>
+  <path class="arrow" d="M1000 290 L1000 405"/>
+  <rect class="orange" x="820" y="405" width="360" height="150" rx="20"/>
+  <text class="label" x="1000" y="452" text-anchor="middle">Token Rewards</text>
+  <text class="body" x="1000" y="490" text-anchor="middle">terminal reward-model score</text>
+  <text class="body" x="1000" y="520" text-anchor="middle">+ sampled reference log-ratio</text>
+  <path class="arrow" d="M820 480 L700 480"/>
+  <rect class="box" x="410" y="405" width="290" height="150" rx="20"/>
+  <text class="label" x="555" y="452" text-anchor="middle">Returns &amp; Advantages</text>
+  <text class="body" x="555" y="490" text-anchor="middle">G&#x209C; propagated backward</text>
+  <text class="body" x="555" y="520" text-anchor="middle">A&#x209C; = G&#x209C; &#x2212; V(s&#x209C;)</text>
+  <path class="arrow" d="M410 480 L300 480"/>
+  <rect class="red" x="60" y="405" width="240" height="150" rx="20"/>
+  <text class="label" x="180" y="452" text-anchor="middle">PPO Update</text>
+  <text class="body" x="180" y="490" text-anchor="middle">clip local ratios</text>
+  <text class="body" x="180" y="520" text-anchor="middle">update actor &amp; critic</text>
+  <path class="arrow" d="M180 555 C180 700 650 720 650 620"/>
+  <rect class="blue" x="480" y="620" width="340" height="150" rx="20"/>
+  <text class="label" x="650" y="668" text-anchor="middle">Improved Policy</text>
+  <text class="body" x="650" y="706" text-anchor="middle">anchored to frozen SFT reference</text>
+  <text class="body" x="650" y="738" text-anchor="middle">collects the next rollout batch</text>
+</svg>

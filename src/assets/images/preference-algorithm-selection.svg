@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrowSelect" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#64748b"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="700" fill="#fafaf9"/>
+  <text x="600" y="42" text-anchor="middle" font-size="23" font-weight="700" fill="#1e293b">Choosing an Offline Preference Objective</text>
+  <text x="600" y="67" text-anchor="middle" font-size="13" fill="#64748b">Begin with the feedback you can collect and the model copies you can afford</text>
+
+  <rect x="470" y="95" width="260" height="62" rx="12" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="600" y="121" text-anchor="middle" font-size="13" font-weight="700" fill="#334155">What feedback is available?</text>
+  <text x="600" y="142" text-anchor="middle" font-size="11" fill="#64748b">This decides the first branch.</text>
+
+  <line x1="470" y1="126" x2="285" y2="126" stroke="#64748b" stroke-width="2"/>
+  <line x1="285" y1="126" x2="285" y2="210" stroke="#64748b" stroke-width="2" marker-end="url(#arrowSelect)"/>
+  <text x="364" y="114" text-anchor="middle" font-size="11" font-weight="700" fill="#6d28d9">individual labels</text>
+
+  <line x1="730" y1="126" x2="915" y2="126" stroke="#64748b" stroke-width="2"/>
+  <line x1="915" y1="126" x2="915" y2="210" stroke="#64748b" stroke-width="2" marker-end="url(#arrowSelect)"/>
+  <text x="836" y="114" text-anchor="middle" font-size="11" font-weight="700" fill="#1e40af">winner / loser pairs</text>
+
+  <rect x="145" y="210" width="280" height="125" rx="15" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+  <text x="285" y="246" text-anchor="middle" font-size="20" font-weight="700" fill="#6d28d9">KTO</text>
+  <text x="285" y="273" text-anchor="middle" font-size="11.5" fill="#4c1d95">Use thumbs-up / thumbs-down data</text>
+  <text x="285" y="294" text-anchor="middle" font-size="11.5" fill="#4c1d95">without manufacturing artificial pairs.</text>
+  <rect x="208" y="307" width="154" height="21" rx="10" fill="#f5f3ff"/>
+  <text x="285" y="322" text-anchor="middle" font-size="9.5" fill="#6d28d9">reference model required</text>
+
+  <rect x="780" y="210" width="270" height="80" rx="15" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="915" y="240" text-anchor="middle" font-size="13" font-weight="700" fill="#1e3a8a">Is supervised fine-tuning</text>
+  <text x="915" y="260" text-anchor="middle" font-size="13" font-weight="700" fill="#1e3a8a">still part of this run?</text>
+
+  <line x1="1050" y1="250" x2="1050" y2="360" stroke="#64748b" stroke-width="2" marker-end="url(#arrowSelect)"/>
+  <text x="1062" y="329" font-size="10.5" font-weight="700" fill="#92400e">yes</text>
+  <rect x="925" y="360" width="240" height="116" rx="15" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  <text x="1045" y="396" text-anchor="middle" font-size="20" font-weight="700" fill="#92400e">ORPO</text>
+  <text x="1045" y="423" text-anchor="middle" font-size="11.5" fill="#78350f">Learn the chosen response with SFT</text>
+  <text x="1045" y="444" text-anchor="middle" font-size="11.5" fill="#78350f">and reject the loser in one stage.</text>
+  <text x="1045" y="465" text-anchor="middle" font-size="9.5" fill="#b45309">reference-free</text>
+
+  <line x1="780" y1="250" x2="675" y2="250" stroke="#64748b" stroke-width="2"/>
+  <line x1="675" y1="250" x2="675" y2="345" stroke="#64748b" stroke-width="2" marker-end="url(#arrowSelect)"/>
+  <text x="719" y="237" text-anchor="middle" font-size="10.5" font-weight="700" fill="#334155">no; align an SFT model</text>
+
+  <rect x="540" y="345" width="270" height="80" rx="15" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="675" y="375" text-anchor="middle" font-size="13" font-weight="700" fill="#334155">Can a frozen reference model</text>
+  <text x="675" y="395" text-anchor="middle" font-size="13" font-weight="700" fill="#334155">fit in the training budget?</text>
+
+  <line x1="615" y1="425" x2="480" y2="525" stroke="#64748b" stroke-width="2" marker-end="url(#arrowSelect)"/>
+  <text x="526" y="466" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1e40af">yes</text>
+  <line x1="735" y1="425" x2="845" y2="525" stroke="#64748b" stroke-width="2" marker-end="url(#arrowSelect)"/>
+  <text x="796" y="466" text-anchor="middle" font-size="10.5" font-weight="700" fill="#166534">no</text>
+
+  <rect x="305" y="525" width="280" height="120" rx="15" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+  <text x="445" y="562" text-anchor="middle" font-size="20" font-weight="700" fill="#1e40af">DPO</text>
+  <text x="445" y="589" text-anchor="middle" font-size="11.5" fill="#1e3a8a">Use the SFT checkpoint as an explicit</text>
+  <text x="445" y="610" text-anchor="middle" font-size="11.5" fill="#1e3a8a">anchor and optimize relative change.</text>
+  <text x="445" y="632" text-anchor="middle" font-size="9.5" fill="#2563eb">strong reference-based default</text>
+
+  <rect x="730" y="525" width="280" height="120" rx="15" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+  <text x="870" y="562" text-anchor="middle" font-size="20" font-weight="700" fill="#166534">SimPO</text>
+  <text x="870" y="589" text-anchor="middle" font-size="11.5" fill="#14532d">Use length-normalized policy likelihood</text>
+  <text x="870" y="610" text-anchor="middle" font-size="11.5" fill="#14532d">and enforce a target margin.</text>
+  <text x="870" y="632" text-anchor="middle" font-size="9.5" fill="#16a34a">reference-free pairwise alignment</text>
+
+  <text x="600" y="678" text-anchor="middle" font-size="11.5" fill="#64748b">After the structural choice, validate on held-out generations; data quality can outweigh the objective.</text>
+</svg>
