@@ -16,7 +16,7 @@ author: Anshuman Patnaik
 category: "Reinforcement Learning"
 readingTime: "29 min read"
 draft: false
-pubDatetime: 2026-07-23
+pubDatetime: 2026-07-23T09:00:00+05:30
 ---
 
 # Group Relative Policy Optimization: Training Reasoning Models Without a Critic

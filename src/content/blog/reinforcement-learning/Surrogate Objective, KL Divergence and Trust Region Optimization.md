@@ -1,6 +1,6 @@
 ---
 title: Surrogate Objective, KL Divergence and Trust Region Optimization
-description: Learning Note 06 — Understanding why modern policy optimization algorithms optimize a surrogate objective instead of the true reinforcement learning objective.
+description: A first-principles account of why policy optimization needs a surrogate objective, how importance sampling lets stale trajectories be reused safely, how KL divergence bounds that reuse, and how trust-region reasoning in TRPO leads naturally to PPO.
 tags:
   - Reinforcement Learning
   - Policy Gradient

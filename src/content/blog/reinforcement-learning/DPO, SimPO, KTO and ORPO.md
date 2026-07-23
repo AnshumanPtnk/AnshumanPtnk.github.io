@@ -19,7 +19,7 @@ created: 2026-07-23
 category: "Reinforcement Learning"
 readingTime: "20 min read"
 draft: false
-pubDatetime: 2026-07-19
+pubDatetime: 2026-07-23T07:00:00+05:30
 ---
 
 # Offline Preference Optimization: DPO, SimPO, KTO, and ORPO

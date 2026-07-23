@@ -13,7 +13,7 @@ tags:
   - Bradley Terry
   - KL Divergence
 draft: false
-pubDatetime: 2026-07-13
+pubDatetime: 2026-07-17T09:00:00+05:30
 ---
 
 # Reinforcement Learning from Human Feedback

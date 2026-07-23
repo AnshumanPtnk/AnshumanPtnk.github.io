@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import {
   defineConfig,
   envField,
@@ -21,6 +22,19 @@ import {
 import { transformerFileName } from "./src/utils/transformers/fileName";
 import config from "./astro-paper.config";
 
+// Post lastmod dates for the sitemap. `src/pages/lastmod.json.ts` writes this
+// file during the main build (which runs before any `astro:build:done` hook),
+// so it's always present by the time `serialize` below reads it.
+let postLastmod: Record<string, string> | undefined;
+function getPostLastmod(url: string): string | undefined {
+  if (!postLastmod) {
+    postLastmod = JSON.parse(
+      readFileSync(new URL("./dist/lastmod.json", import.meta.url), "utf-8")
+    );
+  }
+  return postLastmod![url.replace(/\/$/, "")];
+}
+
 export default defineConfig({
   site: config.site.url,
   integrations: [
@@ -29,7 +43,12 @@ export default defineConfig({
       filter: page =>
         (config.features?.showArchives !== false ||
           !page.endsWith("/archives/")) &&
-        !page.endsWith("/search/"),
+        !page.endsWith("/search/") &&
+        !page.endsWith("/lastmod.json"),
+      serialize: item => {
+        const lastmod = getPostLastmod(item.url);
+        return lastmod ? { ...item, lastmod } : item;
+      },
     }),
   ],
   i18n: {

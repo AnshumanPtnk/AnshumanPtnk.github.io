@@ -5,7 +5,7 @@ export default defineAstroPaperConfig({
     url: "https://anshumanptnk.github.io/",
     title: "Anshuman Patnaik",
     description:
-      "A public engineering notebook documenting the journey from software architecture to AI research. Explore deep dives into reinforcement learning, inference engineering, AI agents, world models, GPU systems, and the mathematics behind modern machine intelligence—written for engineers, researchers, and builders who value understanding over memorization.",
+      "A public engineering notebook on reinforcement learning, inference engineering, computer vision, AI agents, and LLMs.",
     author: "Anshuman Patnaik",
     profile: "https://github.com/AnshumanPtnk",
     googleAnalyticsId: "G-ZVPM15YE9L",

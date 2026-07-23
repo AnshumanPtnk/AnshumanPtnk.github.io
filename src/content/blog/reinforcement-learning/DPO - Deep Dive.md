@@ -18,7 +18,7 @@ created: 2026-07-22
 category: "Reinforcement Learning"
 readingTime: "21 min read"
 draft: false
-pubDatetime: 2026-07-17
+pubDatetime: 2026-07-19T09:00:00+05:30
 ---
 
 # Direct Preference Optimization: Collapsing RLHF Into One Loss

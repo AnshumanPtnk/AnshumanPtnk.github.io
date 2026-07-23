@@ -1,7 +1,7 @@
 ---
 title: Critic, Value Function and Advantage
 subtitle: Why the critic learns the average return and why the advantage remains the learning signal
-description: Learning Note 07
+description: An intuitive account of why the critic learns the expected return rather than individual outcomes, why the advantage doesn't vanish as the critic converges, how the value-function baseline reduces variance without bias, and how this connects to GRPO's group-relative baseline.
 author: Anshuman Patnaik
 pubDatetime: 2026-07-08T20:05:00+05:30
 category: "Reinforcement Learning"
